@@ -280,14 +280,13 @@ Uint8List buildSendStatusRequestFrame(Uint8List recipientPubKey) {
 Uint8List buildSendTextMsgFrame(
   Uint8List recipientPubKey,
   String text, {
-  bool forceFlood = false,
   int attempt = 0,
   int? timestampSeconds,
 }) {
   final textBytes = utf8.encode(text);
   final timestamp = timestampSeconds ?? (DateTime.now().millisecondsSinceEpoch ~/ 1000);
   const prefixSize = 6;
-  final safeAttempt = forceFlood ? 3 : (attempt & 0xFF);
+  final safeAttempt = attempt.clamp(0, 3);
   final frame = Uint8List(1 + 1 + 1 + 4 + prefixSize + textBytes.length + 1);
   int offset = 0;
 

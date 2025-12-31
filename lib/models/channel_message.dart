@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import '../connector/meshcore_protocol.dart';
+import '../helpers/reaction_helper.dart';
 import '../helpers/smaz.dart';
 
 enum ChannelMessageStatus { pending, sent, failed }
@@ -38,6 +39,7 @@ class ChannelMessage {
   final String? replyToMessageId;
   final String? replyToSenderName;
   final String? replyToText;
+  final Map<String, int> reactions;
 
   ChannelMessage({
     this.senderKey,
@@ -56,7 +58,9 @@ class ChannelMessage {
     this.replyToMessageId,
     this.replyToSenderName,
     this.replyToText,
+    Map<String, int>? reactions,
   })  : messageId = messageId ?? '${timestamp.millisecondsSinceEpoch}_${senderName.hashCode}_${text.hashCode}',
+        reactions = reactions ?? {},
         pathBytes = pathBytes ?? Uint8List(0),
         pathVariants = _mergePathVariants(
           pathBytes ?? Uint8List(0),
@@ -75,6 +79,7 @@ class ChannelMessage {
     String? replyToMessageId,
     String? replyToSenderName,
     String? replyToText,
+    Map<String, int>? reactions,
   }) {
     return ChannelMessage(
       senderKey: senderKey,
@@ -93,6 +98,7 @@ class ChannelMessage {
       replyToMessageId: replyToMessageId ?? this.replyToMessageId,
       replyToSenderName: replyToSenderName ?? this.replyToSenderName,
       replyToText: replyToText ?? this.replyToText,
+      reactions: reactions ?? this.reactions,
     );
   }
 
@@ -232,6 +238,10 @@ class ChannelMessage {
       mentionedNode: match.group(1)!,
       actualMessage: match.group(2)!,
     );
+  }
+
+  static ReactionInfo? parseReaction(String text) {
+    return ReactionHelper.parseReaction(text);
   }
 }
 

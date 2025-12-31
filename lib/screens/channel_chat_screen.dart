@@ -12,6 +12,7 @@ import '../helpers/utf8_length_limiter.dart';
 import '../models/channel.dart';
 import '../models/channel_message.dart';
 import '../utils/emoji_utils.dart';
+import '../widgets/emoji_picker.dart';
 import '../widgets/gif_message.dart';
 import '../widgets/gif_picker.dart';
 import 'channel_message_path_screen.dart';
@@ -218,19 +219,22 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      child: Row(
-        mainAxisAlignment: isOutgoing ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: isOutgoing ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          if (!isOutgoing) ...[
-            _buildAvatar(message.senderName),
-            const SizedBox(width: 8),
-          ],
-          Flexible(
-            child: GestureDetector(
-              onTap: () => _showMessagePathInfo(message),
-              onLongPress: () => _showMessageActions(message),
-              child: Container(
+          Row(
+            mainAxisAlignment: isOutgoing ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!isOutgoing) ...[
+                _buildAvatar(message.senderName),
+                const SizedBox(width: 8),
+              ],
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => _showMessagePathInfo(message),
+                  onLongPress: () => _showMessageActions(message),
+                  child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.65,
@@ -322,6 +326,15 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
               ),
             ),
           ),
+            ],
+          ),
+          if (message.reactions.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Padding(
+              padding: EdgeInsets.only(left: isOutgoing ? 0 : 48),
+              child: _buildReactionsDisplay(message),
+            ),
+          ],
         ],
       ),
     );
@@ -397,6 +410,49 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildReactionsDisplay(ChannelMessage message) {
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: message.reactions.entries.map((entry) {
+        final emoji = entry.key;
+        final count = entry.value;
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                emoji,
+                style: const TextStyle(fontSize: 16),
+              ),
+              if (count > 1) ...[
+                const SizedBox(width: 4),
+                Text(
+                  '$count',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -737,6 +793,14 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.add_reaction_outlined),
+              title: const Text('Add Reaction'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _showEmojiPicker(message);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.copy),
               title: const Text('Copy'),
               onTap: () {
@@ -761,6 +825,24 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
         ),
       ),
     );
+  }
+
+  void _showEmojiPicker(ChannelMessage message) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => EmojiPicker(
+        onEmojiSelected: (emoji) {
+          _sendReaction(message, emoji);
+        },
+      ),
+    );
+  }
+
+  void _sendReaction(ChannelMessage message, String emoji) {
+    final connector = context.read<MeshCoreConnector>();
+    final reactionText = 'r:${message.messageId}:$emoji';
+    connector.sendChannelMessage(widget.channel, reactionText);
   }
 
   void _copyMessageText(String text) {

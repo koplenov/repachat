@@ -1,0 +1,137 @@
+import 'package:flutter/material.dart';
+
+class EmojiPicker extends StatelessWidget {
+  final Function(String) onEmojiSelected;
+
+  const EmojiPicker({
+    super.key,
+    required this.onEmojiSelected,
+  });
+
+  static const List<String> quickEmojis = ['👍', '❤️', '😂', '🎉', '👏', '🔥'];
+
+  static const Map<String, List<String>> emojiCategories = {
+    'Smileys': [
+      '😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘',
+      '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🥸', '🤩', '🥳', '😏',
+      '😒', '😞', '😔', '😟', '😕', '🙁', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡',
+      '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶',
+    ],
+    'Gestures': [
+      '👍', '👎', '👊', '✊', '🤛', '🤜', '🤞', '✌️', '🤟', '🤘', '👌', '🤌', '🤏', '👈', '👉', '👆',
+      '👇', '☝️', '👋', '🤚', '🖐️', '✋', '🖖', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳',
+    ],
+    'Hearts': [
+      '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '💕', '💞', '💓', '💗',
+      '💖', '💘', '💝', '💟', '💌', '💢', '💥', '💫', '💦', '💨', '🕳️', '💬', '👁️‍🗨️', '🗨️', '🗯️', '💭',
+    ],
+    'Objects': [
+      '🎉', '🎊', '🎈', '🎁', '🎀', '🪅', '🪆', '🏆', '🥇', '🥈', '🥉', '⚽', '⚾', '🥎', '🏀', '🏐',
+      '🏈', '🏉', '🎾', '🥏', '🎳', '🏏', '🏑', '🏒', '🥍', '🏓', '🏸', '🥊', '🥋', '🥅', '⛳', '🔥',
+      '⭐', '🌟', '✨', '⚡', '💡', '🔦', '🏮', '🪔', '📱', '💻', '⌚', '📷', '📺', '📻', '🎵', '🎶',
+    ],
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.5,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Add Reaction',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Wrap(
+              spacing: 12,
+              children: quickEmojis
+                  .map(
+                    (emoji) => InkWell(
+                      onTap: () {
+                        onEmojiSelected(emoji);
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          emoji,
+                          style: const TextStyle(fontSize: 28),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          const Divider(),
+          Expanded(
+            child: DefaultTabController(
+              length: emojiCategories.length,
+              child: Column(
+                children: [
+                  TabBar(
+                    isScrollable: true,
+                    tabs: emojiCategories.keys
+                        .map((cat) => Tab(text: cat))
+                        .toList(),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: emojiCategories.values
+                          .map(
+                            (emojis) => GridView.builder(
+                              padding: const EdgeInsets.all(8),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 8,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                              ),
+                              itemCount: emojis.length,
+                              itemBuilder: (context, index) => InkWell(
+                                onTap: () {
+                                  onEmojiSelected(emojis[index]);
+                                  Navigator.pop(context);
+                                },
+                                child: Center(
+                                  child: Text(
+                                    emojis[index],
+                                    style: const TextStyle(fontSize: 28),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

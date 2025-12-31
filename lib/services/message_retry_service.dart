@@ -16,7 +16,7 @@ class MessageRetryService extends ChangeNotifier {
   final Map<String, Contact> _pendingContacts = {};
   final Map<String, PathSelection> _pendingPathSelections = {};
 
-  Function(Contact, String, bool, int, int)? _sendMessageCallback;
+  Function(Contact, String, int, int)? _sendMessageCallback;
   Function(String, Message)? _addMessageCallback;
   Function(Message)? _updateMessageCallback;
   Function(Contact)? _clearContactPathCallback;
@@ -27,7 +27,7 @@ class MessageRetryService extends ChangeNotifier {
   MessageRetryService(this._storage);
 
   void initialize({
-    required Function(Contact, String, bool, int, int) sendMessageCallback,
+    required Function(Contact, String, int, int) sendMessageCallback,
     required Function(String, Message) addMessageCallback,
     required Function(Message) updateMessageCallback,
     Function(Contact)? clearContactPathCallback,
@@ -47,17 +47,17 @@ class MessageRetryService extends ChangeNotifier {
   Future<void> sendMessageWithRetry({
     required Contact contact,
     required String text,
-    bool forceFlood = false,
+    bool clearPath = false,
     PathSelection? pathSelection,
     Uint8List? pathBytes,
     int? pathLength,
   }) async {
     final messageId = const Uuid().v4();
-    final effectiveForceFlood = forceFlood || (pathSelection?.useFlood ?? false);
+    final useClearPath = clearPath || (pathSelection?.useFlood ?? false);
     final messagePathBytes =
-        pathBytes ?? _resolveMessagePathBytes(contact, effectiveForceFlood, pathSelection);
+        pathBytes ?? _resolveMessagePathBytes(contact, useClearPath, pathSelection);
     final messagePathLength =
-        pathLength ?? _resolveMessagePathLength(contact, effectiveForceFlood, pathSelection);
+        pathLength ?? _resolveMessagePathLength(contact, useClearPath, pathSelection);
     final message = Message(
       senderKey: contact.publicKey,
       text: text,
@@ -66,7 +66,6 @@ class MessageRetryService extends ChangeNotifier {
       status: MessageStatus.pending,
       messageId: messageId,
       retryCount: 0,
-      forceFlood: effectiveForceFlood,
       pathLength: messagePathLength,
       pathBytes: messagePathBytes,
     );
@@ -90,29 +89,13 @@ class MessageRetryService extends ChangeNotifier {
 
     if (message == null || contact == null) return;
 
-    Contact sendContact = contact;
     final attempt = message.retryCount.clamp(0, 3);
-
-    if (message.forceFlood && contact.pathLength >= 0) {
-      sendContact = Contact(
-        publicKey: contact.publicKey,
-        name: contact.name,
-        type: contact.type,
-        pathLength: -1,
-        path: contact.path,
-        latitude: contact.latitude,
-        longitude: contact.longitude,
-        lastSeen: contact.lastSeen,
-        lastMessageAt: contact.lastMessageAt,
-      );
-    }
 
     if (_sendMessageCallback != null) {
       final timestampSeconds = message.timestamp.millisecondsSinceEpoch ~/ 1000;
       _sendMessageCallback!(
-        sendContact,
+        contact,
         message.text,
-        message.forceFlood,
         attempt,
         timestampSeconds,
       );
@@ -136,7 +119,7 @@ class MessageRetryService extends ChangeNotifier {
           } else if (message.pathLength != null) {
             pathLengthValue = message.pathLength!;
           } else {
-            pathLengthValue = message.forceFlood ? -1 : contact.pathLength;
+            pathLengthValue = contact.pathLength;
           }
           actualTimeout = _calculateTimeoutCallback!(pathLengthValue, message.text.length);
           debugPrint('Using calculated timeout: ${actualTimeout}ms for ${contact.pathLength} hops');
@@ -321,7 +304,7 @@ class MessageRetryService extends ChangeNotifier {
   }
 
   PathSelection? _selectionFromMessage(Message message) {
-    if (message.forceFlood || (message.pathLength != null && message.pathLength! < 0)) {
+    if (message.pathLength != null && message.pathLength! < 0) {
       return const PathSelection(pathBytes: [], hopCount: -1, useFlood: true);
     }
     if (message.pathBytes.isEmpty && message.pathLength == null) {

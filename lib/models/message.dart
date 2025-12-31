@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import '../connector/meshcore_protocol.dart';
+import '../helpers/reaction_helper.dart';
 
 enum MessageStatus { pending, sent, delivered, failed }
 
@@ -19,9 +20,9 @@ class Message {
   final DateTime? sentAt;
   final DateTime? deliveredAt;
   final int? tripTimeMs;
-  final bool forceFlood;
   final int? pathLength;
   final Uint8List pathBytes;
+  final Map<String, int> reactions;
 
   Message({
     required this.senderKey,
@@ -37,10 +38,11 @@ class Message {
     this.sentAt,
     this.deliveredAt,
     this.tripTimeMs,
-    this.forceFlood = false,
     this.pathLength,
     Uint8List? pathBytes,
-  }) : pathBytes = pathBytes ?? Uint8List(0);
+    Map<String, int>? reactions,
+  })  : pathBytes = pathBytes ?? Uint8List(0),
+        reactions = reactions ?? {};
 
   String get senderKeyHex => pubKeyToHex(senderKey);
 
@@ -55,6 +57,7 @@ class Message {
     int? pathLength,
     Uint8List? pathBytes,
     bool? isCli,
+    Map<String, int>? reactions,
   }) {
     return Message(
       senderKey: senderKey,
@@ -70,9 +73,9 @@ class Message {
       sentAt: sentAt ?? this.sentAt,
       deliveredAt: deliveredAt ?? this.deliveredAt,
       tripTimeMs: tripTimeMs ?? this.tripTimeMs,
-      forceFlood: forceFlood,
       pathLength: pathLength ?? this.pathLength,
       pathBytes: pathBytes ?? this.pathBytes,
+      reactions: reactions ?? this.reactions,
     );
   }
 
@@ -121,5 +124,9 @@ class Message {
       pathLength: pathLength,
       pathBytes: pathBytes,
     );
+  }
+
+  static ReactionInfo? parseReaction(String text) {
+    return ReactionHelper.parseReaction(text);
   }
 }

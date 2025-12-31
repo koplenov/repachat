@@ -49,9 +49,9 @@ class MessageStore {
       'sentAt': msg.sentAt?.millisecondsSinceEpoch,
       'deliveredAt': msg.deliveredAt?.millisecondsSinceEpoch,
       'tripTimeMs': msg.tripTimeMs,
-      'forceFlood': msg.forceFlood,
       'pathLength': msg.pathLength,
       'pathBytes': msg.pathBytes.isNotEmpty ? base64Encode(msg.pathBytes) : null,
+      'reactions': msg.reactions,
     };
   }
 
@@ -79,11 +79,13 @@ class MessageStore {
           ? DateTime.fromMillisecondsSinceEpoch(json['deliveredAt'] as int)
           : null,
       tripTimeMs: json['tripTimeMs'] as int?,
-      forceFlood: json['forceFlood'] as bool? ?? false,
       pathLength: json['pathLength'] as int?,
       pathBytes: json['pathBytes'] != null
           ? Uint8List.fromList(base64Decode(json['pathBytes'] as String))
           : Uint8List(0),
+      reactions: (json['reactions'] as Map<String, dynamic>?)?.map(
+        (key, value) => MapEntry(key, value as int),
+      ) ?? {},
     );
   }
 }

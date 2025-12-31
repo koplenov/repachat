@@ -14,6 +14,7 @@ import '../models/channel_message.dart';
 import '../models/contact.dart';
 import '../models/message.dart';
 import '../models/path_selection.dart';
+import '../helpers/reaction_helper.dart';
 import '../helpers/smaz.dart';
 import '../services/ble_debug_log_service.dart';
 import '../services/message_retry_service.dart';
@@ -486,7 +487,6 @@ class MeshCoreConnector extends ChangeNotifier {
   void _sendMessageDirect(
     Contact contact,
     String text,
-    bool forceFlood,
     int attempt,
     int timestampSeconds,
   ) async {
@@ -496,7 +496,6 @@ class MeshCoreConnector extends ChangeNotifier {
       buildSendTextMsgFrame(
         contact.publicKey,
         outboundText,
-        forceFlood: forceFlood,
         attempt: attempt,
         timestampSeconds: timestampSeconds,
       ),
@@ -914,21 +913,13 @@ class MeshCoreConnector extends ChangeNotifier {
   Future<void> sendMessage(
     Contact contact,
     String text, {
-    bool forceFlood = false,
-    Uint8List? customPath,
-    int? customPathLen,
+    bool clearPath = false,
   }) async {
     if (!isConnected || text.isEmpty) return;
 
-    // If custom path is provided, temporarily update the contact's path
-    if (customPath != null && customPathLen != null && customPathLen >= 0) {
-      await setContactPath(contact, customPath, customPathLen);
-    }
-
+    // Handle auto-rotation if enabled
     PathSelection? autoSelection;
-    if (customPath == null &&
-        _appSettingsService?.settings.autoRouteRotationEnabled == true &&
-        !forceFlood) {
+    if (_appSettingsService?.settings.autoRouteRotationEnabled == true && !clearPath) {
       autoSelection = _pathHistoryService?.getNextAutoPathSelection(contact.publicKeyHex);
       if (autoSelection != null) {
         _pathHistoryService?.recordPathAttempt(contact.publicKeyHex, autoSelection);
@@ -943,23 +934,21 @@ class MeshCoreConnector extends ChangeNotifier {
     }
 
     if (_retryService != null) {
-      final pathBytes =
-          _resolveOutgoingPathBytes(contact, customPath, customPathLen, forceFlood, autoSelection);
-      final pathLength =
-          _resolveOutgoingPathLength(contact, customPathLen, forceFlood, autoSelection);
+      final pathBytes = _resolveOutgoingPathBytes(contact, clearPath, autoSelection);
+      final pathLength = _resolveOutgoingPathLength(contact, clearPath, autoSelection);
       final selectedContact = _applyAutoSelection(contact, autoSelection);
       await _retryService!.sendMessageWithRetry(
         contact: selectedContact,
         text: text,
-        forceFlood: forceFlood,
+        clearPath: clearPath,
         pathSelection: autoSelection,
         pathBytes: pathBytes,
         pathLength: pathLength,
       );
     } else {
       // Fallback to old behavior if retry service not initialized
-      final pathBytes = _resolveOutgoingPathBytes(contact, customPath, customPathLen, forceFlood, autoSelection);
-      final pathLength = _resolveOutgoingPathLength(contact, customPathLen, forceFlood, autoSelection);
+      final pathBytes = _resolveOutgoingPathBytes(contact, clearPath, autoSelection);
+      final pathLength = _resolveOutgoingPathLength(contact, clearPath, autoSelection);
       final message = Message.outgoing(
         contact.publicKey,
         text,
@@ -973,7 +962,6 @@ class MeshCoreConnector extends ChangeNotifier {
         buildSendTextMsgFrame(
           contact.publicKey,
           outboundText,
-          forceFlood: forceFlood,
         ),
       );
     }
@@ -1962,9 +1950,35 @@ class MeshCoreConnector extends ChangeNotifier {
 
   void _addMessage(String pubKeyHex, Message message) {
     _conversations.putIfAbsent(pubKeyHex, () => []);
-    _conversations[pubKeyHex]!.add(message);
-    _messageStore.saveMessages(pubKeyHex, _conversations[pubKeyHex]!);
+    final messages = _conversations[pubKeyHex]!;
+
+    // Parse reaction info
+    final reactionInfo = Message.parseReaction(message.text);
+    if (reactionInfo != null) {
+      // Find target message and add reaction
+      _processContactReaction(messages, reactionInfo);
+      _messageStore.saveMessages(pubKeyHex, messages);
+      notifyListeners();
+      return; // Don't add reaction as a visible message
+    }
+
+    messages.add(message);
+    _messageStore.saveMessages(pubKeyHex, messages);
     notifyListeners();
+  }
+
+  void _processContactReaction(List<Message> messages, ReactionInfo reactionInfo) {
+    // Find target message by messageId
+    for (int i = 0; i < messages.length; i++) {
+      if (messages[i].messageId == reactionInfo.targetMessageId) {
+        final currentReactions = Map<String, int>.from(messages[i].reactions);
+        currentReactions[reactionInfo.emoji] =
+            (currentReactions[reactionInfo.emoji] ?? 0) + 1;
+
+        messages[i] = messages[i].copyWith(reactions: currentReactions);
+        break;
+      }
+    }
   }
 
   _RawPacket? _parseRawPacket(Uint8List raw) {
@@ -2048,16 +2062,11 @@ class MeshCoreConnector extends ChangeNotifier {
 
   Uint8List _resolveOutgoingPathBytes(
     Contact contact,
-    Uint8List? customPath,
-    int? customPathLen,
-    bool forceFlood,
+    bool clearPath,
     PathSelection? selection,
   ) {
-    if (forceFlood || contact.pathLength < 0 || selection?.useFlood == true) {
+    if (clearPath || contact.pathLength < 0 || selection?.useFlood == true) {
       return Uint8List(0);
-    }
-    if (customPath != null && customPathLen != null && customPathLen > 0) {
-      return Uint8List.fromList(customPath.sublist(0, customPathLen));
     }
     if (selection != null && selection.pathBytes.isNotEmpty) {
       return Uint8List.fromList(selection.pathBytes);
@@ -2067,15 +2076,11 @@ class MeshCoreConnector extends ChangeNotifier {
 
   int? _resolveOutgoingPathLength(
     Contact contact,
-    int? customPathLen,
-    bool forceFlood,
+    bool clearPath,
     PathSelection? selection,
   ) {
-    if (forceFlood || contact.pathLength < 0 || selection?.useFlood == true) {
+    if (clearPath || contact.pathLength < 0 || selection?.useFlood == true) {
       return -1;
-    }
-    if (customPathLen != null && customPathLen > 0) {
-      return customPathLen;
     }
     if (selection != null && selection.pathBytes.isNotEmpty) {
       return selection.hopCount;
@@ -2086,6 +2091,16 @@ class MeshCoreConnector extends ChangeNotifier {
   bool _addChannelMessage(int channelIndex, ChannelMessage message) {
     _channelMessages.putIfAbsent(channelIndex, () => []);
     final messages = _channelMessages[channelIndex]!;
+
+    // Parse reaction info
+    final reactionInfo = ChannelMessage.parseReaction(message.text);
+    if (reactionInfo != null) {
+      // Find target message and add reaction
+      _processReaction(messages, reactionInfo);
+      // Save updated messages
+      _channelMessageStore.saveChannelMessages(channelIndex, messages);
+      return false; // Don't add reaction as a visible message
+    }
 
     // Parse reply info from message text
     final replyInfo = ChannelMessage.parseReplyMention(message.text);
@@ -2156,6 +2171,21 @@ class MeshCoreConnector extends ChangeNotifier {
       }
     }
     return null;
+  }
+
+  void _processReaction(List<ChannelMessage> messages, ReactionInfo reactionInfo) {
+    // Find target message by messageId
+    for (int i = 0; i < messages.length; i++) {
+      if (messages[i].messageId == reactionInfo.targetMessageId) {
+        final currentReactions = Map<String, int>.from(messages[i].reactions);
+        currentReactions[reactionInfo.emoji] =
+            (currentReactions[reactionInfo.emoji] ?? 0) + 1;
+
+        messages[i] = messages[i].copyWith(reactions: currentReactions);
+        notifyListeners();
+        break;
+      }
+    }
   }
 
   int _findChannelRepeatIndex(List<ChannelMessage> messages, ChannelMessage incoming) {

@@ -16,6 +16,7 @@ import '../services/path_history_service.dart';
 import 'channel_message_path_screen.dart';
 import 'map_screen.dart';
 import '../utils/emoji_utils.dart';
+import '../widgets/emoji_picker.dart';
 import '../widgets/gif_message.dart';
 import '../widgets/gif_picker.dart';
 
@@ -31,7 +32,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
-  bool _forceFlood = false;
+  bool _clearPath = false;
 
   @override
   void initState() {
@@ -59,8 +60,8 @@ class _ChatScreenState extends State<ChatScreen> {
             final contact = _resolveContact(connector);
             final unreadCount = connector.getUnreadCountForContactKey(widget.contact.publicKeyHex);
             final unreadLabel = 'Unread: $unreadCount';
-            final pathLabel = _forceFlood ? 'Flood (forced)' : _currentPathLabel(contact);
-            final canShowPathDetails = !_forceFlood && contact.path.isNotEmpty;
+            final pathLabel = _clearPath ? 'Flood (forced)' : _currentPathLabel(contact);
+            final canShowPathDetails = !_clearPath && contact.path.isNotEmpty;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -89,11 +90,11 @@ class _ChatScreenState extends State<ChatScreen> {
         centerTitle: false,
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(_forceFlood ? Icons.waves : Icons.route),
+            icon: Icon(_clearPath ? Icons.waves : Icons.route),
             tooltip: 'Routing mode',
             onSelected: (mode) {
               setState(() {
-                _forceFlood = (mode == 'flood');
+                _clearPath = (mode == 'flood');
               });
             },
             itemBuilder: (context) => [
@@ -101,12 +102,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 value: 'auto',
                 child: Row(
                   children: [
-                    Icon(Icons.auto_mode, size: 20, color: !_forceFlood ? Theme.of(context).primaryColor : null),
+                    Icon(Icons.auto_mode, size: 20, color: !_clearPath ? Theme.of(context).primaryColor : null),
                     const SizedBox(width: 8),
                     Text(
                       'Auto (use saved path)',
                       style: TextStyle(
-                        fontWeight: !_forceFlood ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: !_clearPath ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ],
@@ -116,12 +117,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 value: 'flood',
                 child: Row(
                   children: [
-                    Icon(Icons.waves, size: 20, color: _forceFlood ? Theme.of(context).primaryColor : null),
+                    Icon(Icons.waves, size: 20, color: _clearPath ? Theme.of(context).primaryColor : null),
                     const SizedBox(width: 8),
                     Text(
                       'Force Flood Mode',
                       style: TextStyle(
-                        fontWeight: _forceFlood ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: _clearPath ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ],
@@ -303,7 +304,7 @@ class _ChatScreenState extends State<ChatScreen> {
     connector.sendMessage(
       widget.contact,
       text,
-      forceFlood: _forceFlood,
+      clearPath: _clearPath,
     );
     _textController.clear();
 
@@ -420,7 +421,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                             if (!context.mounted) return;
                             setState(() {
-                              _forceFlood = false;
+                              _clearPath = false;
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -490,7 +491,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     subtitle: const Text('Use routing toggle in app bar', style: TextStyle(fontSize: 11)),
                     onTap: () {
                       setState(() {
-                        _forceFlood = true;
+                        _clearPath = true;
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -746,24 +747,25 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Enter node IDs separated by commas.',
+              'Enter 2-character hex prefixes for each hop, separated by commas.',
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Example: A1B2C3D4,FFEEDDCC',
+              'Example: A1,F2,3C (each node uses first byte of its public key)',
               style: TextStyle(fontSize: 11, color: Colors.grey),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: controller,
               decoration: const InputDecoration(
-                labelText: 'Path',
-                hintText: 'A1,A2,A3',
+                labelText: 'Path (hex prefixes)',
+                hintText: 'A1,F2,3C',
                 border: OutlineInputBorder(),
-                helperText: 'Node identifiers from your mesh network',
+                helperText: 'Max 64 hops. Each prefix is 2 hex characters (1 byte)',
               ),
               textCapitalization: TextCapitalization.characters,
+              maxLength: 191, // 64 hops * 2 chars + 63 commas
             ),
           ],
         ),
@@ -774,41 +776,74 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           TextButton(
             onPressed: () async {
-              final path = controller.text.trim();
-              if (path.isNotEmpty) {
-                // Parse comma-separated hex strings and convert to bytes
-                final pathIds = path.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
-                final pathBytesList = <int>[];
+              final path = controller.text.trim().toUpperCase();
+              if (path.isEmpty) {
+                if (context.mounted) Navigator.pop(context);
+                return;
+              }
 
-                for (final id in pathIds) {
-                  if (id.length >= 2) {
-                    try {
-                      pathBytesList.add(int.parse(id.substring(0, 2), radix: 16));
-                    } catch (e) {
-                      // Skip invalid hex
-                    }
-                  }
+              // Parse comma-separated hex prefixes
+              final pathIds = path.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
+              final pathBytesList = <int>[];
+              final invalidPrefixes = <String>[];
+
+              for (final id in pathIds) {
+                if (id.length < 2) {
+                  invalidPrefixes.add(id);
+                  continue;
                 }
 
-                if (pathBytesList.isNotEmpty) {
-                  await connector.setContactPath(
-                    widget.contact,
-                    Uint8List.fromList(pathBytesList),
-                    pathBytesList.length,
-                  );
-
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Custom path set: $path'),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  }
+                final prefix = id.substring(0, 2);
+                try {
+                  final byte = int.parse(prefix, radix: 16);
+                  pathBytesList.add(byte);
+                } catch (e) {
+                  invalidPrefixes.add(id);
                 }
               }
-              if (context.mounted) {
-                Navigator.pop(context);
+
+              if (!context.mounted) return;
+
+              // Show error for invalid prefixes
+              if (invalidPrefixes.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Invalid hex prefixes: ${invalidPrefixes.join(", ")}'),
+                    duration: const Duration(seconds: 3),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              // Check max path length (64 hops)
+              if (pathBytesList.length > 64) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Path too long. Maximum 64 hops allowed.'),
+                    duration: Duration(seconds: 3),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              if (pathBytesList.isNotEmpty) {
+                await connector.setContactPath(
+                  widget.contact,
+                  Uint8List.fromList(pathBytesList),
+                  pathBytesList.length,
+                );
+
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Path set: ${pathBytesList.length} ${pathBytesList.length == 1 ? "hop" : "hops"}'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
               }
             },
             child: const Text('Set Path'),
@@ -1019,6 +1054,14 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              leading: const Icon(Icons.add_reaction_outlined),
+              title: const Text('Add Reaction'),
+              onTap: () {
+                Navigator.pop(sheetContext);
+                _showEmojiPicker(message);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.copy),
               title: const Text('Copy'),
               onTap: () {
@@ -1072,14 +1115,34 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _retryMessage(Message message) {
     final connector = Provider.of<MeshCoreConnector>(context, listen: false);
+    // Retry with clearPath if the message has no path or pathLength is -1 (indicating flood was used)
+    final shouldClearPath = message.pathLength != null && message.pathLength! < 0;
     connector.sendMessage(
       widget.contact,
       message.text,
-      forceFlood: message.forceFlood,
+      clearPath: shouldClearPath,
     );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Retrying message')),
     );
+  }
+
+  void _showEmojiPicker(Message message) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => EmojiPicker(
+        onEmojiSelected: (emoji) {
+          _sendReaction(message, emoji);
+        },
+      ),
+    );
+  }
+
+  void _sendReaction(Message message, String emoji) {
+    final connector = context.read<MeshCoreConnector>();
+    final reactionText = 'r:${message.messageId}:$emoji';
+    connector.sendMessage(widget.contact, reactionText);
   }
 }
 
@@ -1114,19 +1177,22 @@ class _MessageBubble extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: GestureDetector(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Row(
-          mainAxisAlignment: isOutgoing ? MainAxisAlignment.end : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!isOutgoing) ...[
-              _buildAvatar(senderName, colorScheme),
-              const SizedBox(width: 8),
-            ],
-            Flexible(
-              child: Container(
+      child: Column(
+        crossAxisAlignment: isOutgoing ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: onTap,
+            onLongPress: onLongPress,
+            child: Row(
+              mainAxisAlignment: isOutgoing ? MainAxisAlignment.end : MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!isOutgoing) ...[
+                  _buildAvatar(senderName, colorScheme),
+                  const SizedBox(width: 8),
+                ],
+                Flexible(
+                  child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.65,
@@ -1215,6 +1281,15 @@ class _MessageBubble extends StatelessWidget {
           ],
         ),
       ),
+      if (message.reactions.isNotEmpty) ...[
+        const SizedBox(height: 4),
+        Padding(
+          padding: EdgeInsets.only(left: isOutgoing ? 0 : 48),
+          child: _buildReactionsDisplay(context, message, colorScheme),
+        ),
+      ],
+    ],
+      ),
     );
   }
 
@@ -1285,6 +1360,49 @@ class _MessageBubble extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildReactionsDisplay(BuildContext context, Message message, ColorScheme colorScheme) {
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: message.reactions.entries.map((entry) {
+        final emoji = entry.key;
+        final count = entry.value;
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                emoji,
+                style: const TextStyle(fontSize: 16),
+              ),
+              if (count > 1) ...[
+                const SizedBox(width: 4),
+                Text(
+                  '$count',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSecondaryContainer,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
