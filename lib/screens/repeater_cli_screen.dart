@@ -767,7 +767,7 @@ class _RepeaterCliScreenState extends State<RepeaterCliScreen> {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 8),
-      color: colorScheme.surfaceVariant,
+      color: colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(color: colorScheme.outlineVariant),

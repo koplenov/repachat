@@ -123,7 +123,7 @@ class _DeviceScreenState extends State<DeviceScreen>
 
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceVariant,
+      color: colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),

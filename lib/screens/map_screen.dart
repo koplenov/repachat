@@ -785,10 +785,13 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     final label = await _promptForLabel(context, defaultLabel);
-    if (label == null) return;
+    if (label == null || !mounted) return;
 
     final markerText = _formatMarkerMessage(position, label, flags);
+    if (!mounted) return;
+
     await _showRecipientSheet(
+      // ignore: use_build_context_synchronously
       context: context,
       connector: connector,
       markerText: markerText,

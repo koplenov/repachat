@@ -142,7 +142,9 @@ class _MapCacheScreenState extends State<MapCacheScreen> {
       ),
     );
 
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
+
+    final cacheService = context.read<MapTileCacheService>();
 
     setState(() {
       _isDownloading = true;
@@ -150,7 +152,6 @@ class _MapCacheScreenState extends State<MapCacheScreen> {
       _failedTiles = 0;
     });
 
-    final cacheService = context.read<MapTileCacheService>();
     final result = await cacheService.downloadRegion(
       bounds: bounds,
       minZoom: _minZoom,
@@ -198,7 +199,7 @@ class _MapCacheScreenState extends State<MapCacheScreen> {
         ],
       ),
     );
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
 
     final cacheService = context.read<MapTileCacheService>();
     await cacheService.clearCache();

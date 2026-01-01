@@ -183,7 +183,7 @@ class MapTileCacheService {
   int _lonToTileX(double lon, int zoom, int maxIndex) {
     final n = 1 << zoom;
     final value = ((lon + 180.0) / 360.0 * n).floor();
-    return value.clamp(0, maxIndex) as int;
+    return value.clamp(0, maxIndex);
   }
 
   int _latToTileY(double lat, int zoom, int maxIndex) {
@@ -194,12 +194,12 @@ class MapTileCacheService {
             2 *
             n)
         .floor();
-    return value.clamp(0, maxIndex) as int;
+    return value.clamp(0, maxIndex);
   }
 
   double _clampLatitude(double lat) {
     const maxLat = 85.05112878;
-    return lat.clamp(-maxLat, maxLat) as double;
+    return lat.clamp(-maxLat, maxLat);
   }
 
   String _buildTileUrl(int x, int y, int zoom) {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -101,16 +100,16 @@ class _RepeaterLoginDialogState extends State<RepeaterLoginDialog> {
       }
 
       // If we got a response, login succeeded
-      if (mounted) {
-        // Save password if requested
-        if (_savePassword) {
-          await _storage.saveRepeaterPassword(
-              widget.repeater.publicKeyHex, password);
-        } else {
-          // Remove saved password if user unchecked the box
-          await _storage.removeRepeaterPassword(widget.repeater.publicKeyHex);
-        }
+      // Save password if requested
+      if (_savePassword) {
+        await _storage.saveRepeaterPassword(
+            widget.repeater.publicKeyHex, password);
+      } else {
+        // Remove saved password if user unchecked the box
+        await _storage.removeRepeaterPassword(widget.repeater.publicKeyHex);
+      }
 
+      if (mounted) {
         Navigator.pop(context, password);
         Future.microtask(() => widget.onLogin(password));
       }

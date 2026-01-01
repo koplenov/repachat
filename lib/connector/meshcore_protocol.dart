@@ -25,6 +25,7 @@ const int cmdGetBattAndStorage = 20;
 const int cmdDeviceQuery = 22;
 const int cmdSendLogin = 26;
 const int cmdSendStatusReq = 27;
+const int cmdGetContactByKey = 30;
 const int cmdGetChannel = 31;
 const int cmdSetChannel = 32;
 const int cmdGetRadioSettings = 57;
@@ -504,6 +505,15 @@ Uint8List buildUpdateContactPathFrame(
   final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
   writeUint32LE(frame, offset, timestamp);
 
+  return frame;
+}
+
+// Build CMD_GET_CONTACT_BY_KEY frame
+// Format: [cmd][pub_key x32]
+Uint8List buildGetContactByKeyFrame(Uint8List pubKey) {
+  final frame = Uint8List(1 + pubKeySize);
+  frame[0] = cmdGetContactByKey;
+  frame.setRange(1, 1 + pubKeySize, pubKey);
   return frame;
 }
 

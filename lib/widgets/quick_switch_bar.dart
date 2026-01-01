@@ -37,8 +37,8 @@ class QuickSwitchBar extends StatelessWidget {
                 surfaceTintColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 indicatorColor: colorScheme.primaryContainer,
-                labelTextStyle: MaterialStateProperty.resolveWith((states) {
-                  final isSelected = states.contains(MaterialState.selected);
+                labelTextStyle: WidgetStateProperty.resolveWith((states) {
+                  final isSelected = states.contains(WidgetState.selected);
                   return labelStyle.copyWith(
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected
@@ -46,8 +46,8 @@ class QuickSwitchBar extends StatelessWidget {
                         : colorScheme.onSurfaceVariant,
                   );
                 }),
-                iconTheme: MaterialStateProperty.resolveWith((states) {
-                  final isSelected = states.contains(MaterialState.selected);
+                iconTheme: WidgetStateProperty.resolveWith((states) {
+                  final isSelected = states.contains(WidgetState.selected);
                   return IconThemeData(
                     color: isSelected
                         ? colorScheme.onPrimaryContainer

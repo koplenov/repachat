@@ -67,27 +67,30 @@ class NotificationService {
     required String contactName,
     required String message,
     String? contactId,
+    int? badgeCount,
   }) async {
     if (!_isInitialized) {
       await initialize();
     }
 
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'messages',
       'Messages',
       channelDescription: 'New message notifications',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
+      number: badgeCount,
     );
 
-    const iosDetails = DarwinNotificationDetails(
+    final iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+      badgeNumber: badgeCount,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -143,27 +146,30 @@ class NotificationService {
     required String channelName,
     required String message,
     int? channelIndex,
+    int? badgeCount,
   }) async {
     if (!_isInitialized) {
       await initialize();
     }
 
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'channel_messages',
       'Channel Messages',
       channelDescription: 'New channel message notifications',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
+      number: badgeCount,
     );
 
-    const iosDetails = DarwinNotificationDetails(
+    final iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+      badgeNumber: badgeCount,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );

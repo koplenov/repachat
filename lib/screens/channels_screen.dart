@@ -78,48 +78,46 @@ class _ChannelsScreenState extends State<ChannelsScreen>
             ),
           ],
         ),
-        body: Consumer<MeshCoreConnector>(
-          builder: (context, connector, child) {
-            if (connector.isLoadingChannels) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        body: () {
+          if (connector.isLoadingChannels) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            final channels = connector.channels;
+          final channels = connector.channels;
 
-            if (channels.isEmpty) {
-              return EmptyState(
-                icon: Icons.tag,
-                title: 'No channels configured',
-                action: FilledButton.icon(
-                  onPressed: () => _addPublicChannel(context, connector),
-                  icon: const Icon(Icons.public),
-                  label: const Text('Add Public Channel'),
+          if (channels.isEmpty) {
+            return EmptyState(
+              icon: Icons.tag,
+              title: 'No channels configured',
+              action: FilledButton.icon(
+                onPressed: () => _addPublicChannel(context, connector),
+                icon: const Icon(Icons.public),
+                label: const Text('Add Public Channel'),
+              ),
+            );
+          }
+
+          return ReorderableListView.builder(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 88),
+            buildDefaultDragHandles: false,
+            itemCount: channels.length,
+            onReorder: (oldIndex, newIndex) {
+              if (newIndex > oldIndex) newIndex -= 1;
+              final reordered = List<Channel>.from(channels);
+              final item = reordered.removeAt(oldIndex);
+              reordered.insert(newIndex, item);
+              unawaited(
+                connector.setChannelOrder(
+                  reordered.map((c) => c.index).toList(),
                 ),
               );
-            }
-
-            return ReorderableListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
-              buildDefaultDragHandles: false,
-              itemCount: channels.length,
-              onReorder: (oldIndex, newIndex) {
-                if (newIndex > oldIndex) newIndex -= 1;
-                final reordered = List<Channel>.from(channels);
-                final item = reordered.removeAt(oldIndex);
-                reordered.insert(newIndex, item);
-                unawaited(
-                  connector.setChannelOrder(
-                    reordered.map((c) => c.index).toList(),
-                  ),
-                );
-              },
-              itemBuilder: (context, index) {
-                final channel = channels[index];
-                return _buildChannelTile(context, connector, channel, index);
-              },
-            );
-          },
-        ),
+            },
+            itemBuilder: (context, index) {
+              final channel = channels[index];
+              return _buildChannelTile(context, connector, channel, index);
+            },
+          );
+        }(),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _showAddChannelDialog(context),
           child: const Icon(Icons.add),
@@ -144,7 +142,7 @@ class _ChannelsScreenState extends State<ChannelsScreen>
     final unreadCount = connector.getUnreadCountForChannel(channel);
     return Card(
       key: ValueKey('channel_${channel.index}'),
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         dense: true,
         minVerticalPadding: 0,

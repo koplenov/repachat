@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../connector/meshcore_connector.dart';
 import '../connector/meshcore_protocol.dart';
 import '../models/radio_settings.dart';
-import '../services/app_settings_service.dart';
 import 'app_settings_screen.dart';
 import 'ble_debug_log_screen.dart';
 
@@ -63,6 +62,8 @@ class SettingsScreen extends StatelessWidget {
               _buildInfoRow('Node Name', connector.selfName!),
             if (connector.selfPublicKey != null)
               _buildInfoRow('Public Key', '${pubKeyToHex(connector.selfPublicKey!).substring(0, 16)}...'),
+            _buildInfoRow('Contacts Count', '${connector.contacts.length}'),
+            _buildInfoRow('Channel Count', '${connector.channels.length}'),
           ],
         ),
       ),
@@ -619,7 +620,7 @@ class _RadioSettingsDialogState extends State<_RadioSettingsDialog> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<LoRaBandwidth>(
-              value: _bandwidth,
+              initialValue: _bandwidth,
               decoration: const InputDecoration(
                 labelText: 'Bandwidth',
                 border: OutlineInputBorder(),
@@ -636,7 +637,7 @@ class _RadioSettingsDialogState extends State<_RadioSettingsDialog> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<LoRaSpreadingFactor>(
-              value: _spreadingFactor,
+              initialValue: _spreadingFactor,
               decoration: const InputDecoration(
                 labelText: 'Spreading Factor',
                 border: OutlineInputBorder(),
@@ -653,7 +654,7 @@ class _RadioSettingsDialogState extends State<_RadioSettingsDialog> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<LoRaCodingRate>(
-              value: _codingRate,
+              initialValue: _codingRate,
               decoration: const InputDecoration(
                 labelText: 'Coding Rate',
                 border: OutlineInputBorder(),

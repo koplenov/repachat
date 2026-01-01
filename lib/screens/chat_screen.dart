@@ -32,7 +32,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
-  bool _clearPath = false;
 
   @override
   void initState() {
@@ -40,6 +39,11 @@ class _ChatScreenState extends State<ChatScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<MeshCoreConnector>().setActiveContact(widget.contact.publicKeyHex);
+
+      // Scroll to bottom when opening chat
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
     });
   }
 
@@ -60,75 +64,86 @@ class _ChatScreenState extends State<ChatScreen> {
             final contact = _resolveContact(connector);
             final unreadCount = connector.getUnreadCountForContactKey(widget.contact.publicKeyHex);
             final unreadLabel = 'Unread: $unreadCount';
-            final pathLabel = _clearPath ? 'Flood (forced)' : _currentPathLabel(contact);
-            final canShowPathDetails = !_clearPath && contact.path.isNotEmpty;
+            final pathLabel = _currentPathLabel(contact);
+
+            // Show path details if we have path data (from device or override)
+            final hasPathData = contact.path.isNotEmpty || contact.pathOverrideBytes != null;
+            final effectivePath = contact.pathOverrideBytes ?? contact.path;
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(contact.name),
-                if (canShowPathDetails)
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onLongPress: () => _showFullPathDialog(context, contact.path),
-                    child: Text(
-                      '$pathLabel • $unreadLabel',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.normal),
-                    ),
-                  )
-                else
-                  Text(
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: hasPathData ? () => _showFullPathDialog(context, effectivePath) : null,
+                  child: Text(
                     '$pathLabel • $unreadLabel',
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.normal),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.normal,
+                      decoration: hasPathData ? TextDecoration.underline : null,
+                      decorationStyle: TextDecorationStyle.dotted,
+                    ),
                   ),
+                ),
               ],
             );
           },
         ),
         centerTitle: false,
         actions: [
-          PopupMenuButton<String>(
-            icon: Icon(_clearPath ? Icons.waves : Icons.route),
-            tooltip: 'Routing mode',
-            onSelected: (mode) {
-              setState(() {
-                _clearPath = (mode == 'flood');
-              });
+          Consumer<MeshCoreConnector>(
+            builder: (context, connector, _) {
+              final contact = _resolveContact(connector);
+              final isFloodMode = contact.pathOverride == -1;
+
+              return PopupMenuButton<String>(
+                icon: Icon(isFloodMode ? Icons.waves : Icons.route),
+                tooltip: 'Routing mode',
+                onSelected: (mode) async {
+                  if (mode == 'flood') {
+                    await connector.setPathOverride(contact, pathLen: -1);
+                  } else {
+                    await connector.setPathOverride(contact, pathLen: null);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'auto',
+                    child: Row(
+                      children: [
+                        Icon(Icons.auto_mode, size: 20, color: !isFloodMode ? Theme.of(context).primaryColor : null),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Auto (use saved path)',
+                          style: TextStyle(
+                            fontWeight: !isFloodMode ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'flood',
+                    child: Row(
+                      children: [
+                        Icon(Icons.waves, size: 20, color: isFloodMode ? Theme.of(context).primaryColor : null),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Force Flood Mode',
+                          style: TextStyle(
+                            fontWeight: isFloodMode ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
             },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'auto',
-                child: Row(
-                  children: [
-                    Icon(Icons.auto_mode, size: 20, color: !_clearPath ? Theme.of(context).primaryColor : null),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Auto (use saved path)',
-                      style: TextStyle(
-                        fontWeight: !_clearPath ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'flood',
-                child: Row(
-                  children: [
-                    Icon(Icons.waves, size: 20, color: _clearPath ? Theme.of(context).primaryColor : null),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Force Flood Mode',
-                      style: TextStyle(
-                        fontWeight: _clearPath ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
           IconButton(
             icon: const Icon(Icons.timeline),
@@ -304,7 +319,6 @@ class _ChatScreenState extends State<ChatScreen> {
     connector.sendMessage(
       widget.contact,
       text,
-      clearPath: _clearPath,
     );
     _textController.clear();
 
@@ -416,23 +430,14 @@ class _ChatScreenState extends State<ChatScreen> {
                             final pathBytes = Uint8List.fromList(path.pathBytes);
                             final pathLength = path.pathBytes.length;
 
-                            await connector.setContactPath(
+                            // Set the path override to persist user's choice
+                            await connector.setPathOverride(
                               widget.contact,
-                              pathBytes,
-                              pathLength,
-                            );
-
-                            // Update contact in memory directly for immediate UI feedback
-                            connector.updateContactInMemory(
-                              widget.contact.publicKeyHex,
+                              pathLen: pathLength,
                               pathBytes: pathBytes,
-                              pathLength: pathLength,
                             );
 
                             if (!context.mounted) return;
-                            setState(() {
-                              _clearPath = false;
-                            });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Using ${path.hopCount} ${path.hopCount == 1 ? 'hop' : 'hops'} path'),
@@ -499,10 +504,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     title: const Text('Force Flood Mode', style: TextStyle(fontSize: 14)),
                     subtitle: const Text('Use routing toggle in app bar', style: TextStyle(fontSize: 11)),
-                    onTap: () {
-                      setState(() {
-                        _clearPath = true;
-                      });
+                    onTap: () async {
+                      await connector.setPathOverride(widget.contact, pathLen: -1);
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Flood mode enabled. Toggle back via routing icon in app bar.'),
@@ -573,9 +577,16 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String _currentPathLabel(Contact contact) {
+    // Check if user has set a path override
+    if (contact.pathOverride != null) {
+      if (contact.pathOverride! < 0) return 'Flood (forced)';
+      if (contact.pathOverride == 0) return 'Direct (forced)';
+      return '${contact.pathOverride} hops (forced)';
+    }
+
+    // Use device's path
     if (contact.pathLength < 0) return 'Flood (auto)';
     if (contact.pathLength == 0) return 'Direct';
-    if (contact.pathIdList.isNotEmpty) return contact.pathIdList;
     return '${contact.pathLength} hops';
   }
 
@@ -604,7 +615,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       'Location',
                       '${contact.latitude?.toStringAsFixed(4)}, ${contact.longitude?.toStringAsFixed(4)}',
                     ),
-                  _buildInfoRow('Public Key', contact.publicKeyHex.substring(0, 16) + '...'),
+                  _buildInfoRow('Public Key', '${contact.publicKeyHex.substring(0, 16)}...'),
                   const Divider(),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
@@ -1125,12 +1136,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _retryMessage(Message message) {
     final connector = Provider.of<MeshCoreConnector>(context, listen: false);
-    // Retry with clearPath if the message has no path or pathLength is -1 (indicating flood was used)
-    final shouldClearPath = message.pathLength != null && message.pathLength! < 0;
+    // Retry using the contact's current path override setting
     connector.sendMessage(
       widget.contact,
       message.text,
-      clearPath: shouldClearPath,
     );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Retrying message')),
@@ -1151,7 +1160,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendReaction(Message message, String emoji) {
     final connector = context.read<MeshCoreConnector>();
-    final reactionText = 'r:${message.messageId}:$emoji';
+    // Send reaction with messageId if available, otherwise use lightweight format
+    // Parser will extract reactionKey (timestamp_senderPrefix) for deduplication
+    final messageId = message.messageId ??
+        '${message.timestamp.millisecondsSinceEpoch}_${message.senderKeyHex.substring(0, 8)}';
+    final reactionText = 'r:$messageId:$emoji';
     connector.sendMessage(widget.contact, reactionText);
   }
 }
@@ -1176,7 +1189,6 @@ class _MessageBubble extends StatelessWidget {
     final gifId = _parseGifId(message.text);
     final poi = _parsePoiMessage(message.text);
     final isFailed = message.status == MessageStatus.failed;
-    final attempts = message.retryCount + 1;
     final bubbleColor = isFailed
         ? colorScheme.errorContainer
         : (isOutgoing ? colorScheme.primary : colorScheme.surfaceContainerHighest);
@@ -1240,13 +1252,14 @@ class _MessageBubble extends StatelessWidget {
                           color: textColor,
                         ),
                       ),
-                    if (isOutgoing) ...[
+                    if (isOutgoing && message.retryCount > 0) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Attempts: $attempts',
+                        'Retry ${message.retryCount}/4',
                         style: TextStyle(
                           fontSize: 10,
                           color: metaColor,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

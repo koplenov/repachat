@@ -33,6 +33,10 @@ class ContactStore {
       'type': contact.type,
       'pathLength': contact.pathLength,
       'path': base64Encode(contact.path),
+      'pathOverride': contact.pathOverride,
+      'pathOverrideBytes': contact.pathOverrideBytes != null
+          ? base64Encode(contact.pathOverrideBytes!)
+          : null,
       'latitude': contact.latitude,
       'longitude': contact.longitude,
       'lastSeen': contact.lastSeen.millisecondsSinceEpoch,
@@ -51,6 +55,10 @@ class ContactStore {
       path: json['path'] != null
           ? Uint8List.fromList(base64Decode(json['path'] as String))
           : Uint8List(0),
+      pathOverride: json['pathOverride'] as int?,
+      pathOverrideBytes: json['pathOverrideBytes'] != null
+          ? Uint8List.fromList(base64Decode(json['pathOverrideBytes'] as String))
+          : null,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
       lastSeen: DateTime.fromMillisecondsSinceEpoch(lastSeenMs),

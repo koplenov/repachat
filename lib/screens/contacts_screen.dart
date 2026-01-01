@@ -682,7 +682,7 @@ class _ContactsScreenState extends State<ContactsScreen>
                     return;
                   }
                   final exists = _groups.any((g) {
-                    if (isEditing && g.name == group!.name) return false;
+                    if (isEditing && g.name == group.name) return false;
                     return g.name.toLowerCase() == name.toLowerCase();
                   });
                   if (exists) {
@@ -693,7 +693,7 @@ class _ContactsScreenState extends State<ContactsScreen>
                   }
                   setState(() {
                     if (isEditing) {
-                      final index = _groups.indexWhere((g) => g.name == group!.name);
+                      final index = _groups.indexWhere((g) => g.name == group.name);
                       if (index != -1) {
                         _groups[index] = ContactGroup(
                           name: name,

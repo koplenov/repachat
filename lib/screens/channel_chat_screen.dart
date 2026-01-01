@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +41,11 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<MeshCoreConnector>().setActiveChannel(widget.channel.index);
+
+      // Scroll to bottom when opening channel chat
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
     });
   }
 
@@ -352,12 +356,15 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
 
     Widget contentPreview;
     if (gifId != null) {
-      contentPreview = Row(
-        children: [
-          Icon(Icons.gif_box, size: 14, color: previewTextColor),
-          const SizedBox(width: 4),
-          Text('GIF', style: TextStyle(fontSize: 12, color: previewTextColor)),
-        ],
+      contentPreview = ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: GifMessage(
+          url: 'https://media.giphy.com/media/$gifId/giphy.gif',
+          backgroundColor: colorScheme.surfaceContainerHighest,
+          fallbackTextColor: previewTextColor,
+          width: 120,
+          height: 80,
+        ),
       );
     } else if (poi != null) {
       contentPreview = Row(
@@ -843,6 +850,8 @@ class _ChannelChatScreenState extends State<ChannelChatScreen> {
 
   void _sendReaction(ChannelMessage message, String emoji) {
     final connector = context.read<MeshCoreConnector>();
+    // Send reaction with full messageId to find target, but parser will extract
+    // lightweight reactionKey (timestamp_senderPrefix) for deduplication
     final reactionText = 'r:${message.messageId}:$emoji';
     connector.sendChannelMessage(widget.channel, reactionText);
   }

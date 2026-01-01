@@ -5,8 +5,10 @@ class Contact {
   final Uint8List publicKey;
   final String name;
   final int type;
-  final int pathLength; // -1 = flood, 0+ = direct hops
-  final Uint8List path;
+  final int pathLength; // -1 = flood, 0+ = direct hops (from device)
+  final Uint8List path; // Path bytes from device
+  final int? pathOverride; // User's path override: -1 = force flood, null = auto
+  final Uint8List? pathOverrideBytes; // User's path override bytes
   final double? latitude;
   final double? longitude;
   final DateTime lastSeen;
@@ -18,6 +20,8 @@ class Contact {
     required this.type,
     required this.pathLength,
     required this.path,
+    this.pathOverride,
+    this.pathOverrideBytes,
     this.latitude,
     this.longitude,
     required this.lastSeen,
@@ -55,6 +59,9 @@ class Contact {
     int? type,
     int? pathLength,
     Uint8List? path,
+    int? pathOverride,
+    Uint8List? pathOverrideBytes,
+    bool clearPathOverride = false,
     double? latitude,
     double? longitude,
     DateTime? lastSeen,
@@ -66,6 +73,8 @@ class Contact {
       type: type ?? this.type,
       pathLength: pathLength ?? this.pathLength,
       path: path ?? this.path,
+      pathOverride: clearPathOverride ? null : (pathOverride ?? this.pathOverride),
+      pathOverrideBytes: clearPathOverride ? null : (pathOverrideBytes ?? this.pathOverrideBytes),
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       lastSeen: lastSeen ?? this.lastSeen,
