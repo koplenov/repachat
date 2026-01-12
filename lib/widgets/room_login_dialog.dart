@@ -91,9 +91,12 @@ class _RoomLoginDialogState extends State<RoomLoginDialog> {
       final selection = await _connector.preparePathForContactSend(room);
       final loginFrame = buildSendLoginFrame(room.publicKey, password);
       final pathLengthValue = selection.useFlood ? -1 : selection.hopCount;
+      final responseBytes = loginFrame.length > maxFrameSize
+          ? loginFrame.length
+          : maxFrameSize;
       final timeoutMs = _connector.calculateTimeout(
         pathLength: pathLengthValue,
-        messageBytes: loginFrame.length,
+        messageBytes: responseBytes,
       );
       final timeoutSeconds = (timeoutMs / 1000).ceil();
       final timeout = Duration(milliseconds: timeoutMs);

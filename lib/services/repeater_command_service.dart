@@ -70,11 +70,6 @@ class RepeaterCommandService {
       _pendingByPrefix[prefix] = commandId;
       final framedCommand = '$prefix$command';
       final pathLengthValue = selection.useFlood ? -1 : selection.hopCount;
-      final timeoutMs = _connector.calculateTimeout(
-        pathLength: pathLengthValue,
-        messageBytes: framedCommand.length,
-      );
-      final timeoutSeconds = (timeoutMs / 1000).ceil();
       final timestampSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       _connector.trackRepeaterAck(
         contact: repeater,
@@ -89,6 +84,12 @@ class RepeaterCommandService {
         attempt: attempt,
         timestampSeconds: timestampSeconds,
       );
+      final responseBytes = frame.length > maxFrameSize ? frame.length : maxFrameSize;
+      final timeoutMs = _connector.calculateTimeout(
+        pathLength: pathLengthValue,
+        messageBytes: responseBytes,
+      );
+      final timeoutSeconds = (timeoutMs / 1000).ceil();
       await _connector.sendFrame(frame);
       _commandTimeouts[commandId]?.cancel();
       _commandTimeouts[commandId] = Timer(

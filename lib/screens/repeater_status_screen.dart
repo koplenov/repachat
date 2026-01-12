@@ -261,9 +261,12 @@ class _RepeaterStatusScreenState extends State<RepeaterStatusScreen> {
       await connector.sendFrame(frame);
 
       final pathLengthValue = selection.useFlood ? -1 : selection.hopCount;
-      final messageBytes = frame.length >= _statusResponseBytes
+      var messageBytes = frame.length >= _statusResponseBytes
           ? frame.length
           : _statusResponseBytes;
+      if (messageBytes < maxFrameSize) {
+        messageBytes = maxFrameSize;
+      }
       final timeoutMs = connector.calculateTimeout(
         pathLength: pathLengthValue,
         messageBytes: messageBytes,
