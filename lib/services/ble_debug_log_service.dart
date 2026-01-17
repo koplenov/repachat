@@ -86,14 +86,26 @@ class BleDebugLogService extends ChangeNotifier {
   }
 
   String _describeFrame(int code, Uint8List frame, bool outgoing, String? note) {
-    final label = _codeLabel(code);
+    final label = _codeLabel(code, outgoing: outgoing);
     final prefix = outgoing ? 'TX' : 'RX';
     final extra = _frameDetail(code, frame);
     final noteText = note != null ? ' • $note' : '';
     return '$prefix $label$extra$noteText';
   }
 
-  String _codeLabel(int code) {
+  String _codeLabel(int code, {required bool outgoing}) {
+    if (outgoing) {
+      return _commandLabel(code) ?? 'CODE_$code';
+    }
+
+    final pushLabel = _pushLabel(code);
+    if (pushLabel != null) return pushLabel;
+    final responseLabel = _responseLabel(code);
+    if (responseLabel != null) return responseLabel;
+    return 'CODE_$code';
+  }
+
+  String? _commandLabel(int code) {
     switch (code) {
       case cmdAppStart:
         return 'CMD_APP_START';
@@ -135,6 +147,13 @@ class BleDebugLogService extends ChangeNotifier {
         return 'CMD_SET_CHANNEL';
       case cmdGetRadioSettings:
         return 'CMD_GET_RADIO_SETTINGS';
+      default:
+        return null;
+    }
+  }
+
+  String? _responseLabel(int code) {
+    switch (code) {
       case respCodeOk:
         return 'RESP_CODE_OK';
       case respCodeErr:
@@ -167,6 +186,13 @@ class BleDebugLogService extends ChangeNotifier {
         return 'RESP_CODE_CHANNEL_INFO';
       case respCodeRadioSettings:
         return 'RESP_CODE_RADIO_SETTINGS';
+      default:
+        return null;
+    }
+  }
+
+  String? _pushLabel(int code) {
+    switch (code) {
       case pushCodeAdvert:
         return 'PUSH_CODE_ADVERT';
       case pushCodePathUpdated:
@@ -184,7 +210,7 @@ class BleDebugLogService extends ChangeNotifier {
       case pushCodeNewAdvert:
         return 'PUSH_CODE_NEW_ADVERT';
       default:
-        return 'CODE_$code';
+        return null;
     }
   }
 

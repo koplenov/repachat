@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +31,6 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
   static const int _statusResponseBytes =
       _statusPayloadOffset + _statusStatsSize;
   Uint8List _tagData = Uint8List(4);
-  int _timeEstment = 0;
 
   bool _isLoading = false;
   bool _isLoaded = false;
@@ -64,18 +60,19 @@ class _TelemetryScreenState extends State<TelemetryScreen> {
 
       if (frame[0] == respCodeSent) {
         _tagData = frame.sublist(2, 6);
-        _timeEstment = frame.buffer.asByteData().getUint32(6, Endian.little);
       }
 
       // Check if it's a binary response
       if (frame[0] == pushCodeBinaryResponse &&
           listEquals(frame.sublist(2, 6), _tagData)) {
-        _handleStatusResponse(context, frame.sublist(6));
+        if (!mounted) return;
+        _handleStatusResponse(frame.sublist(6));
       }
     });
   }
 
-  void _handleStatusResponse(BuildContext context, Uint8List frame) {
+  void _handleStatusResponse(Uint8List frame) {
+    if (!mounted) return;
     setState(() {
       _parsedTelemetry = CayenneLpp.parseByChannel(frame);
     });

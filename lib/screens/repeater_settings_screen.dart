@@ -895,7 +895,7 @@ class _RepeaterSettingsScreenState extends State<RepeaterSettingsScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<int>(
-              value: _bandwidth,
+              initialValue: _bandwidth,
               decoration: InputDecoration(
                 labelText: l10n.repeater_bandwidth,
                 border: const OutlineInputBorder(),
@@ -917,7 +917,7 @@ class _RepeaterSettingsScreenState extends State<RepeaterSettingsScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<int>(
-              value: _spreadingFactor,
+              initialValue: _spreadingFactor,
               decoration: InputDecoration(
                 labelText: l10n.repeater_spreadingFactor,
                 border: const OutlineInputBorder(),
@@ -939,7 +939,7 @@ class _RepeaterSettingsScreenState extends State<RepeaterSettingsScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<int>(
-              value: _codingRate,
+              initialValue: _codingRate,
               decoration: InputDecoration(
                 labelText: l10n.repeater_codingRate,
                 border: const OutlineInputBorder(),

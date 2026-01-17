@@ -391,8 +391,9 @@ class _MapScreenState extends State<MapScreen> {
       if (!contact.hasLocation) continue;
 
       // Apply node type filters
-      if (contact.type == advTypeRepeater && !settings.mapShowRepeaters)
+      if (contact.type == advTypeRepeater && !settings.mapShowRepeaters) {
         continue;
+      }
       if (contact.type == advTypeChat && !settings.mapShowChatNodes) continue;
       if (contact.type != advTypeChat &&
           contact.type != advTypeRepeater &&

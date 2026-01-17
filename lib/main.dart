@@ -27,7 +27,7 @@ void main() async {
   final storage = StorageService();
   final connector = MeshCoreConnector();
   final pathHistoryService = PathHistoryService(storage);
-  final retryService = MessageRetryService(storage);
+  final retryService = MessageRetryService();
   final appSettingsService = AppSettingsService();
   final bleDebugLogService = BleDebugLogService();
   final appDebugLogService = AppDebugLogService();

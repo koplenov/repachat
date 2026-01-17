@@ -1766,7 +1766,7 @@ class MeshCoreConnector extends ChangeNotifier {
       _batteryMillivolts = readUint16LE(frame, 1);
       final volts = (_batteryMillivolts! / 1000.0).toStringAsFixed(2);
       _appDebugLogService?.info(
-        'Pulled battery: $volts V (${_batteryMillivolts} mV)',
+        'Pulled battery: $volts V ($_batteryMillivolts mV)',
         tag: 'Battery',
       );
       notifyListeners();
@@ -2272,7 +2272,6 @@ class MeshCoreConnector extends ChangeNotifier {
     // [6-9] = estimated_timeout_ms (uint32)
 
     if (frame.length >= 10) {
-      final isFlood = frame[1] != 0;
       final ackHash = Uint8List.fromList(frame.sublist(2, 6));
       final timeoutMs = readUint32LE(frame, 6);
 
@@ -2618,7 +2617,7 @@ class MeshCoreConnector extends ChangeNotifier {
     final keyLen = psk.length < 16 ? psk.length : 16;
     key16.setRange(0, keyLen, psk);
 
-    final cipher = ECBBlockCipher(AESFastEngine());
+    final cipher = ECBBlockCipher(AESEngine());
     cipher.init(false, KeyParameter(key16));
     final out = Uint8List(cipherText.length);
     for (var i = 0; i < cipherText.length; i += 16) {
@@ -2992,7 +2991,6 @@ const int _phVerMask = 0x03;
 
 const int _routeTransportFlood = 0x00;
 const int _routeFlood = 0x01;
-const int _routeDirect = 0x02;
 const int _routeTransportDirect = 0x03;
 
 const int _payloadTypeGroupText = 0x05;

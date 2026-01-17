@@ -6,7 +6,6 @@ import 'package:crypto/crypto.dart';
 import '../models/contact.dart';
 import '../models/message.dart';
 import '../models/path_selection.dart';
-import 'storage_service.dart';
 import 'app_settings_service.dart';
 import 'app_debug_log_service.dart';
 
@@ -36,7 +35,6 @@ class MessageRetryService extends ChangeNotifier {
   static const int maxRetries = 5;
   static const int maxAckHistorySize = 100;
 
-  final StorageService _storage;
   final Map<String, Timer> _timeoutTimers = {};
   final Map<String, Message> _pendingMessages = {};
   final Map<String, Contact> _pendingContacts = {};
@@ -59,7 +57,7 @@ class MessageRetryService extends ChangeNotifier {
   AppDebugLogService? _debugLogService;
   Function(String, PathSelection, bool, int?)? _recordPathResultCallback;
 
-  MessageRetryService(this._storage);
+  MessageRetryService();
 
   void initialize({
     required Function(Contact, String, int, int) sendMessageCallback,
