@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Prijava je bila neuspešna. Geslo je napačno ali pa je repetitor nedosegljiv.",
-
   "common_reload": "Ponovno naloži",
   "common_clear": "Ponoviti",
   "path_currentPath": "Trenutna pot: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Skeniraj QR kodo",
   "channels_scanQrCodeComingSoon": "Prihajajoča",
   "channels_enterHashtag": "Vnesite hashtag",
-  "channels_hashtagHint": "npr. #ekipa"
+  "channels_hashtagHint": "npr. #ekipa",
+  "contacts_manageRoom": "Upravljajte strežnik sobe",
+  "room_management": "Upravljanje stremlišča"
 }

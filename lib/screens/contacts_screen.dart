@@ -30,10 +30,7 @@ import 'settings_screen.dart';
 class ContactsScreen extends StatefulWidget {
   final bool hideBackButton;
 
-  const ContactsScreen({
-    super.key,
-    this.hideBackButton = false,
-  });
+  const ContactsScreen({super.key, this.hideBackButton = false});
 
   @override
   State<ContactsScreen> createState() => _ContactsScreenState();
@@ -114,7 +111,8 @@ class _ContactsScreenState extends State<ContactsScreen>
           top: false,
           child: QuickSwitchBar(
             selectedIndex: 0,
-            onDestinationSelected: (index) => _handleQuickSwitch(index, context),
+            onDestinationSelected: (index) =>
+                _handleQuickSwitch(index, context),
           ),
         ),
       ),
@@ -168,8 +166,9 @@ class _ContactsScreenState extends State<ContactsScreen>
     }
 
     final filteredAndSorted = _filterAndSortContacts(contacts, connector);
-    final filteredGroups =
-        _showUnreadOnly ? const <ContactGroup>[] : _filterAndSortGroups(_groups, contacts);
+    final filteredGroups = _showUnreadOnly
+        ? const <ContactGroup>[]
+        : _filterAndSortGroups(_groups, contacts);
 
     return Column(
       children: [
@@ -199,7 +198,10 @@ class _ContactsScreenState extends State<ContactsScreen>
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
             onChanged: (value) {
               _searchDebounce?.cancel();
@@ -238,14 +240,18 @@ class _ContactsScreenState extends State<ContactsScreen>
                         final group = filteredGroups[index];
                         return _buildGroupTile(context, group, contacts);
                       }
-                      final contact = filteredAndSorted[index - filteredGroups.length];
-                      final unreadCount = connector.getUnreadCountForContact(contact);
+                      final contact =
+                          filteredAndSorted[index - filteredGroups.length];
+                      final unreadCount = connector.getUnreadCountForContact(
+                        contact,
+                      );
                       return _ContactTile(
                         contact: contact,
                         lastSeen: _resolveLastSeen(contact),
                         unreadCount: unreadCount,
                         onTap: () => _openChat(context, contact),
-                        onLongPress: () => _showContactOptions(context, connector, contact),
+                        onLongPress: () =>
+                            _showContactOptions(context, connector, contact),
                       );
                     },
                   ),
@@ -255,35 +261,47 @@ class _ContactsScreenState extends State<ContactsScreen>
     );
   }
 
-  List<ContactGroup> _filterAndSortGroups(List<ContactGroup> groups, List<Contact> contacts) {
+  List<ContactGroup> _filterAndSortGroups(
+    List<ContactGroup> groups,
+    List<Contact> contacts,
+  ) {
     final query = _searchQuery.trim().toLowerCase();
     final contactsByKey = <String, Contact>{};
     for (final contact in contacts) {
       contactsByKey[contact.publicKeyHex] = contact;
     }
 
-    final filtered = groups.where((group) {
-      if (query.isEmpty) return true;
-      if (group.name.toLowerCase().contains(query)) return true;
-      for (final key in group.memberKeys) {
-        final contact = contactsByKey[key];
-        if (contact != null && matchesContactQuery(contact, query)) return true;
-      }
-      return false;
-    }).where((group) {
-      if (_typeFilter == ContactTypeFilter.all) return true;
-      for (final key in group.memberKeys) {
-        final contact = contactsByKey[key];
-        if (contact != null && _matchesTypeFilter(contact)) return true;
-      }
-      return false;
-    }).toList();
+    final filtered = groups
+        .where((group) {
+          if (query.isEmpty) return true;
+          if (group.name.toLowerCase().contains(query)) return true;
+          for (final key in group.memberKeys) {
+            final contact = contactsByKey[key];
+            if (contact != null && matchesContactQuery(contact, query))
+              return true;
+          }
+          return false;
+        })
+        .where((group) {
+          if (_typeFilter == ContactTypeFilter.all) return true;
+          for (final key in group.memberKeys) {
+            final contact = contactsByKey[key];
+            if (contact != null && _matchesTypeFilter(contact)) return true;
+          }
+          return false;
+        })
+        .toList();
 
-    filtered.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    filtered.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
     return filtered;
   }
 
-  List<Contact> _filterAndSortContacts(List<Contact> contacts, MeshCoreConnector connector) {
+  List<Contact> _filterAndSortContacts(
+    List<Contact> contacts,
+    MeshCoreConnector connector,
+  ) {
     var filtered = contacts.where((contact) {
       if (_searchQuery.isEmpty) return true;
       return matchesContactQuery(contact, _searchQuery);
@@ -301,19 +319,27 @@ class _ContactsScreenState extends State<ContactsScreen>
 
     switch (_sortOption) {
       case ContactSortOption.lastSeen:
-        filtered.sort((a, b) => _resolveLastSeen(b).compareTo(_resolveLastSeen(a)));
+        filtered.sort(
+          (a, b) => _resolveLastSeen(b).compareTo(_resolveLastSeen(a)),
+        );
         break;
       case ContactSortOption.recentMessages:
         filtered.sort((a, b) {
           final aMessages = connector.getMessages(a);
           final bMessages = connector.getMessages(b);
-          final aLastMsg = aMessages.isEmpty ? DateTime(1970) : aMessages.last.timestamp;
-          final bLastMsg = bMessages.isEmpty ? DateTime(1970) : bMessages.last.timestamp;
+          final aLastMsg = aMessages.isEmpty
+              ? DateTime(1970)
+              : aMessages.last.timestamp;
+          final bLastMsg = bMessages.isEmpty
+              ? DateTime(1970)
+              : bMessages.last.timestamp;
           return bLastMsg.compareTo(aLastMsg);
         });
         break;
       case ContactSortOption.name:
-        filtered.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        filtered.sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
         break;
     }
 
@@ -340,7 +366,11 @@ class _ContactsScreenState extends State<ContactsScreen>
         : contact.lastSeen;
   }
 
-  Widget _buildGroupTile(BuildContext context, ContactGroup group, List<Contact> contacts) {
+  Widget _buildGroupTile(
+    BuildContext context,
+    ContactGroup group,
+    List<Contact> contacts,
+  ) {
     final memberContacts = _resolveGroupContacts(group, contacts);
     final subtitle = _formatGroupMembers(context, memberContacts);
     return ListTile(
@@ -359,7 +389,10 @@ class _ContactsScreenState extends State<ContactsScreen>
     );
   }
 
-  List<Contact> _resolveGroupContacts(ContactGroup group, List<Contact> contacts) {
+  List<Contact> _resolveGroupContacts(
+    ContactGroup group,
+    List<Contact> contacts,
+  ) {
     final byKey = <String, Contact>{};
     for (final contact in contacts) {
       byKey[contact.publicKeyHex] = contact;
@@ -371,7 +404,9 @@ class _ContactsScreenState extends State<ContactsScreen>
         resolved.add(contact);
       }
     }
-    resolved.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    resolved.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
     return resolved;
   }
 
@@ -387,7 +422,7 @@ class _ContactsScreenState extends State<ContactsScreen>
     if (contact.type == advTypeRepeater) {
       _showRepeaterLogin(context, contact);
     } else if (contact.type == advTypeRoom) {
-      _showRoomLogin(context, contact);
+      _showRoomLogin(context, contact, false);
     } else {
       context.read<MeshCoreConnector>().markContactRead(contact.publicKeyHex);
       Navigator.push(
@@ -403,17 +438,13 @@ class _ContactsScreenState extends State<ContactsScreen>
       case 1:
         Navigator.pushReplacement(
           context,
-          buildQuickSwitchRoute(
-            const ChannelsScreen(hideBackButton: true),
-          ),
+          buildQuickSwitchRoute(const ChannelsScreen(hideBackButton: true)),
         );
         break;
       case 2:
         Navigator.pushReplacement(
           context,
-          buildQuickSwitchRoute(
-            const MapScreen(hideBackButton: true),
-          ),
+          buildQuickSwitchRoute(const MapScreen(hideBackButton: true)),
         );
         break;
     }
@@ -429,10 +460,8 @@ class _ContactsScreenState extends State<ContactsScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RepeaterHubScreen(
-                repeater: repeater,
-                password: password,
-              ),
+              builder: (context) =>
+                  RepeaterHubScreen(repeater: repeater, password: password),
             ),
           );
         },
@@ -440,7 +469,7 @@ class _ContactsScreenState extends State<ContactsScreen>
     );
   }
 
-  void _showRoomLogin(BuildContext context, Contact room) {
+  void _showRoomLogin(BuildContext context, Contact room, bool settings) {
     showDialog(
       context: context,
       builder: (context) => RoomLoginDialog(
@@ -451,7 +480,9 @@ class _ContactsScreenState extends State<ContactsScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ChatScreen(contact: room),
+              builder: (context) => settings
+                  ? RepeaterHubScreen(repeater: room, password: password)
+                  : ChatScreen(contact: room),
             ),
           );
         },
@@ -459,7 +490,11 @@ class _ContactsScreenState extends State<ContactsScreen>
     );
   }
 
-  void _showGroupOptions(BuildContext context, ContactGroup group, List<Contact> contacts) {
+  void _showGroupOptions(
+    BuildContext context,
+    ContactGroup group,
+    List<Contact> contacts,
+  ) {
     final members = _resolveGroupContacts(group, contacts);
     showModalBottomSheet(
       context: context,
@@ -478,7 +513,10 @@ class _ContactsScreenState extends State<ContactsScreen>
               ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
-                title: Text(context.l10n.contacts_deleteGroup, style: const TextStyle(color: Colors.red)),
+                title: Text(
+                  context.l10n.contacts_deleteGroup,
+                  style: const TextStyle(color: Colors.red),
+                ),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _confirmDeleteGroup(context, group);
@@ -522,7 +560,10 @@ class _ContactsScreenState extends State<ContactsScreen>
               });
               await _saveGroups();
             },
-            child: Text(context.l10n.common_delete, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              context.l10n.common_delete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -548,10 +589,16 @@ class _ContactsScreenState extends State<ContactsScreen>
           final filteredContacts = filterQuery.isEmpty
               ? sortedContacts
               : sortedContacts
-                  .where((contact) => matchesContactQuery(contact, filterQuery))
-                  .toList();
+                    .where(
+                      (contact) => matchesContactQuery(contact, filterQuery),
+                    )
+                    .toList();
           return AlertDialog(
-            title: Text(isEditing ? context.l10n.contacts_editGroup : context.l10n.contacts_newGroup),
+            title: Text(
+              isEditing
+                  ? context.l10n.contacts_editGroup
+                  : context.l10n.contacts_newGroup,
+            ),
             content: SizedBox(
               width: double.maxFinite,
               child: Column(
@@ -582,12 +629,18 @@ class _ContactsScreenState extends State<ContactsScreen>
                   SizedBox(
                     height: 240,
                     child: filteredContacts.isEmpty
-                        ? Center(child: Text(context.l10n.contacts_noContactsMatchFilter))
+                        ? Center(
+                            child: Text(
+                              context.l10n.contacts_noContactsMatchFilter,
+                            ),
+                          )
                         : ListView.builder(
                             itemCount: filteredContacts.length,
                             itemBuilder: (context, index) {
                               final contact = filteredContacts[index];
-                              final isSelected = selectedKeys.contains(contact.publicKeyHex);
+                              final isSelected = selectedKeys.contains(
+                                contact.publicKeyHex,
+                              );
                               return CheckboxListTile(
                                 value: isSelected,
                                 title: Text(contact.name),
@@ -618,7 +671,9 @@ class _ContactsScreenState extends State<ContactsScreen>
                   final name = nameController.text.trim();
                   if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.contacts_groupNameRequired)),
+                      SnackBar(
+                        content: Text(context.l10n.contacts_groupNameRequired),
+                      ),
                     );
                     return;
                   }
@@ -628,13 +683,19 @@ class _ContactsScreenState extends State<ContactsScreen>
                   });
                   if (exists) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.contacts_groupAlreadyExists(name))),
+                      SnackBar(
+                        content: Text(
+                          context.l10n.contacts_groupAlreadyExists(name),
+                        ),
+                      ),
                     );
                     return;
                   }
                   setState(() {
                     if (isEditing) {
-                      final index = _groups.indexWhere((g) => g.name == group.name);
+                      final index = _groups.indexWhere(
+                        (g) => g.name == group.name,
+                      );
                       if (index != -1) {
                         _groups[index] = ContactGroup(
                           name: name,
@@ -642,7 +703,12 @@ class _ContactsScreenState extends State<ContactsScreen>
                         );
                       }
                     } else {
-                      _groups.add(ContactGroup(name: name, memberKeys: selectedKeys.toList()));
+                      _groups.add(
+                        ContactGroup(
+                          name: name,
+                          memberKeys: selectedKeys.toList(),
+                        ),
+                      );
                     }
                   });
                   await _saveGroups();
@@ -650,7 +716,11 @@ class _ContactsScreenState extends State<ContactsScreen>
                     Navigator.pop(dialogContext);
                   }
                 },
-                child: Text(isEditing ? context.l10n.common_save : context.l10n.common_create),
+                child: Text(
+                  isEditing
+                      ? context.l10n.common_save
+                      : context.l10n.common_create,
+                ),
               ),
             ],
           );
@@ -675,23 +745,31 @@ class _ContactsScreenState extends State<ContactsScreen>
           children: [
             if (isRepeater)
               ListTile(
-                leading: const Icon(Icons.cell_tower, color: Colors.orange),
+                leading: const Icon(Icons.settings, color: Colors.orange),
                 title: Text(context.l10n.contacts_manageRepeater),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _showRepeaterLogin(context, contact);
                 },
               )
-            else if (isRoom)
+            else if (isRoom) ...[
               ListTile(
                 leading: const Icon(Icons.room, color: Colors.blue),
                 title: Text(context.l10n.contacts_roomLogin),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  _showRoomLogin(context, contact);
+                  _showRoomLogin(context, contact, false);
                 },
-              )
-            else
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings, color: Colors.orange),
+                title: Text(context.l10n.room_management),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _showRoomLogin(context, contact, true);
+                },
+              ),
+            ] else
               ListTile(
                 leading: const Icon(Icons.chat),
                 title: Text(context.l10n.contacts_openChat),
@@ -702,7 +780,10 @@ class _ContactsScreenState extends State<ContactsScreen>
               ),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: Text(context.l10n.contacts_deleteContact, style: const TextStyle(color: Colors.red)),
+              title: Text(
+                context.l10n.contacts_deleteContact,
+                style: const TextStyle(color: Colors.red),
+              ),
               onTap: () {
                 Navigator.pop(sheetContext);
                 _confirmDelete(context, connector, contact);
@@ -734,7 +815,10 @@ class _ContactsScreenState extends State<ContactsScreen>
               Navigator.pop(dialogContext);
               connector.removeContact(contact);
             },
-            child: Text(context.l10n.common_delete, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              context.l10n.common_delete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -759,14 +843,17 @@ class _ContactTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shotPublicKey = "<${contact.publicKeyHex.substring(0, 8)}...${contact.publicKeyHex.substring(contact.publicKeyHex.length - 8)}>";
+    final shotPublicKey =
+        "<${contact.publicKeyHex.substring(0, 8)}...${contact.publicKeyHex.substring(contact.publicKeyHex.length - 8)}>";
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: _getTypeColor(contact.type),
         child: _buildContactAvatar(contact),
       ),
       title: Text(contact.name),
-      subtitle: Text('${contact.typeLabel} • ${contact.pathLabel} $shotPublicKey'),
+      subtitle: Text(
+        '${contact.typeLabel} • ${contact.pathLabel} $shotPublicKey',
+      ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -791,10 +878,7 @@ class _ContactTile extends StatelessWidget {
   Widget _buildContactAvatar(Contact contact) {
     final emoji = firstEmoji(contact.name);
     if (emoji != null) {
-      return Text(
-        emoji,
-        style: const TextStyle(fontSize: 18),
-      );
+      return Text(emoji, style: const TextStyle(fontSize: 18));
     }
     return Icon(_getTypeIcon(contact.type), color: Colors.white, size: 20);
   }
@@ -833,13 +917,19 @@ class _ContactTile extends StatelessWidget {
     final now = DateTime.now();
     final diff = now.difference(lastSeen);
 
-    if (diff.isNegative || diff.inMinutes < 5) return context.l10n.contacts_lastSeenNow;
-    if (diff.inMinutes < 60) return context.l10n.contacts_lastSeenMinsAgo(diff.inMinutes);
+    if (diff.isNegative || diff.inMinutes < 5)
+      return context.l10n.contacts_lastSeenNow;
+    if (diff.inMinutes < 60)
+      return context.l10n.contacts_lastSeenMinsAgo(diff.inMinutes);
     if (diff.inHours < 24) {
       final hours = diff.inHours;
-      return hours == 1 ? context.l10n.contacts_lastSeenHourAgo : context.l10n.contacts_lastSeenHoursAgo(hours);
+      return hours == 1
+          ? context.l10n.contacts_lastSeenHourAgo
+          : context.l10n.contacts_lastSeenHoursAgo(hours);
     }
     final days = diff.inDays;
-    return days == 1 ? context.l10n.contacts_lastSeenDayAgo : context.l10n.contacts_lastSeenDaysAgo(days);
+    return days == 1
+        ? context.l10n.contacts_lastSeenDayAgo
+        : context.l10n.contacts_lastSeenDaysAgo(days);
   }
 }

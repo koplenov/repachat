@@ -645,6 +645,9 @@ class AppLocalizationsSl extends AppLocalizations {
   String get contacts_manageRepeater => 'Upravljajte Ponovitve';
 
   @override
+  String get contacts_manageRoom => 'Manage Room Server';
+
+  @override
   String get contacts_roomLogin => 'Vnos v sobo';
 
   @override
@@ -1579,6 +1582,9 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get repeater_management => 'Upravljanje ponovitve';
+
+  @override
+  String get room_management => 'Room Server Management';
 
   @override
   String get repeater_managementTools => 'Upravne orodje';

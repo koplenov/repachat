@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Anmeldung fehlgeschlagen. Entweder ist das Passwort falsch oder der Repeater ist nicht erreichbar.",
-
   "common_reload": "Neu laden",
   "common_clear": "Löschen",
   "path_currentPath": "Aktiver Pfad: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Scannen Sie einen QR-Code",
   "channels_scanQrCodeComingSoon": "Bald verfügbar",
   "channels_enterHashtag": "Gib Hashtag ein",
-  "channels_hashtagHint": "z.B. #team"
+  "channels_hashtagHint": "z.B. #team",
+  "contacts_manageRoom": "Verwalten Sie den Raumserver",
+  "room_management": "Raumserververwaltung"
 }

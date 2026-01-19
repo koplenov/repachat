@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Inloggning misslyckades. Antingen är lösenordet fel eller så går det inte att nå repeatern.",
-
   "common_reload": "Ladda om",
   "common_clear": "Rensa",
   "path_currentPath": "Nuvarande sökväg: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Skanna en QR-kod",
   "channels_scanQrCodeComingSoon": "Kommer snart",
   "channels_enterHashtag": "Ange hashtag",
-  "channels_hashtagHint": "t.ex. #team"
+  "channels_hashtagHint": "t.ex. #team",
+  "contacts_manageRoom": "Hantera Rumserver",
+  "room_management": "Rumserverhantering"
 }

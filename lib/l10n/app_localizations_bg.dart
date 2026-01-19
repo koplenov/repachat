@@ -651,6 +651,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get contacts_manageRepeater => 'Управление на Повтарящ се Елемент';
 
   @override
+  String get contacts_manageRoom => 'Manage Room Server';
+
+  @override
   String get contacts_roomLogin => 'Вход в стаята';
 
   @override
@@ -1586,6 +1589,9 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get repeater_management => 'Управление на повторители';
+
+  @override
+  String get room_management => 'Room Server Management';
 
   @override
   String get repeater_managementTools => 'Инструменти за управление';

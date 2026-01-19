@@ -641,7 +641,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contacts_manageRepeater => 'Manage Repeater';
 
   @override
-  String get contacts_roomLogin => 'Room Login';
+  String get contacts_manageRoom => 'Manage Room Server';
+
+  @override
+  String get contacts_roomLogin => 'Room Server Login';
 
   @override
   String get contacts_openChat => 'Open Chat';
@@ -1439,7 +1442,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login_repeaterLogin => 'Repeater Login';
 
   @override
-  String get login_roomLogin => 'Room Login';
+  String get login_roomLogin => 'Room Server Login';
 
   @override
   String get login_password => 'Password';
@@ -1560,6 +1563,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get repeater_management => 'Repeater Management';
+
+  @override
+  String get room_management => 'Room Server Management';
 
   @override
   String get repeater_managementTools => 'Management Tools';

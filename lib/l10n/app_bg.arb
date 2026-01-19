@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Входът не беше успешен. Или паролата е грешна, или повторителят е недостъпен.",
-
   "common_reload": "Презареди",
   "common_clear": "Изчисти",
   "path_currentPath": "Текущ път: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Сканирайте QR код",
   "channels_scanQrCodeComingSoon": "Ще излезе скоро",
   "channels_enterHashtag": "Въведете хаштаг",
-  "channels_hashtagHint": "напр. #отбор"
+  "channels_hashtagHint": "напр. #отбор",
+  "room_management": "Управление на сървъра за стая",
+  "contacts_manageRoom": "Управление на сървър за стая"
 }

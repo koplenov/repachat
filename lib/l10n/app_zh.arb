@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "登录失败。密码不正确或中继器不可达。",
-
   "common_reload": "重新加载",
   "common_clear": "清除",
   "path_currentPath": "当前路径：{path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "扫描二维码",
   "channels_scanQrCodeComingSoon": "即将到来",
   "channels_enterHashtag": "输入标签",
-  "channels_hashtagHint": "例如 #团队"
+  "channels_hashtagHint": "例如 #团队",
+  "contacts_manageRoom": "管理房间服务器",
+  "room_management": "房间服务器管理"
 }

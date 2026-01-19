@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Falha no login. A senha está incorreta ou o repetidor está inacessível.",
-
   "common_reload": "Recarregar",
   "common_clear": "Limpar",
   "path_currentPath": "Caminho atual: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Digitalizar um Código QR",
   "channels_scanQrCodeComingSoon": "Em breve",
   "channels_enterHashtag": "Insira hashtag",
-  "channels_hashtagHint": "ex. #equipe"
+  "channels_hashtagHint": "ex. #equipe",
+  "contacts_manageRoom": "Gerenciar Servidor de Sala {name} ({count})",
+  "room_management": "Gerenciamento de Servidor de Sala"
 }

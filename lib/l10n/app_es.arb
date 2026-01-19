@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Inicio fallido. La contraseña es incorrecta o el repetidor no está disponible.",
-
   "common_reload": "Recargar",
   "common_clear": "Borrar",
   "path_currentPath": "Ruta actual: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Escanear un Código QR",
   "channels_scanQrCodeComingSoon": "Próximamente",
   "channels_enterHashtag": "Introducir hashtag",
-  "channels_hashtagHint": "ej. #equipo"
+  "channels_hashtagHint": "ej. #equipo",
+  "contacts_manageRoom": "Gestionar Servidor de Habitación",
+  "room_management": "Administración del Servidor de Habitación"
 }

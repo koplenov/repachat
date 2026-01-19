@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Prihlásenie zlyhalo. Heslo je nesprávne alebo je opakovač nedostupný.",
-
   "common_reload": "Načítať",
   "common_clear": "Zmazať",
   "path_currentPath": "Aktívna cesta: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Skenujte QR kód",
   "channels_scanQrCodeComingSoon": "Čoskoro",
   "channels_enterHashtag": "Zadajte hashtag",
-  "channels_hashtagHint": "napr. #tím"
+  "channels_hashtagHint": "napr. #tím",
+  "room_management": "Správa servera miestnosti",
+  "contacts_manageRoom": "Spravovať server miestnosti"
 }

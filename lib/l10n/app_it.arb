@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Accesso fallito. La password non è corretta oppure il ripetitore non è raggiungibile.",
-
   "common_reload": "Ricaricare",
   "common_clear": "Cancella",
   "path_currentPath": "Percorso corrente: {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Scansiona un codice QR",
   "channels_scanQrCodeComingSoon": "Arriverà presto",
   "channels_enterHashtag": "Inserisci hashtag",
-  "channels_hashtagHint": "es. #team"
+  "channels_hashtagHint": "es. #team",
+  "room_management": "Gestione del Server di Camera",
+  "contacts_manageRoom": "Gestisci Server Camera"
 }

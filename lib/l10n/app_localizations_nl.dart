@@ -645,6 +645,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get contacts_manageRepeater => 'Beheer Repeater';
 
   @override
+  String get contacts_manageRoom => 'Manage Room Server';
+
+  @override
   String get contacts_roomLogin => 'Ruimte Inloggen';
 
   @override
@@ -1577,6 +1580,9 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get repeater_management => 'Beheer Repeaters';
+
+  @override
+  String get room_management => 'Room Server Management';
 
   @override
   String get repeater_managementTools => 'Beheerinstrumenten';

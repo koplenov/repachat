@@ -822,7 +822,6 @@
     }
   },
   "login_failedMessage": "Connexion échouée. Soit le mot de passe est incorrect, soit le relais est injoignable.",
-
   "common_reload": "Recharger",
   "common_clear": "Effacer",
   "path_currentPath": "Chemin actuel : {path}",
@@ -1349,5 +1348,7 @@
   "channels_scanQrCode": "Scanner un code QR",
   "channels_scanQrCodeComingSoon": "Bientôt disponible",
   "channels_enterHashtag": "Entrez le hashtag",
-  "channels_hashtagHint": "ex. #équipe"
+  "channels_hashtagHint": "ex. #équipe",
+  "contacts_manageRoom": "Gérer le serveur de la pièce {name}",
+  "room_management": "Gestion du serveur de pièce"
 }

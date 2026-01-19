@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meshcore_open/connector/meshcore_protocol.dart';
 import '../l10n/l10n.dart';
 import '../models/contact.dart';
 import 'repeater_status_screen.dart';
@@ -25,10 +26,17 @@ class RepeaterHubScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(l10n.repeater_management),
+            Text(
+              repeater.type == advTypeRepeater
+                  ? l10n.repeater_management
+                  : l10n.room_management,
+            ),
             Text(
               repeater.name,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ],
         ),
@@ -39,135 +47,147 @@ class RepeaterHubScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-              // Repeater info card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.orange,
-                        child: const Icon(Icons.cell_tower, size: 40, color: Colors.white),
+            // Repeater info card
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.orange,
+                      child: const Icon(
+                        Icons.cell_tower,
+                        size: 40,
+                        color: Colors.white,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        repeater.name,
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      repeater.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '<${repeater.publicKeyHex.substring(0, 8)}...${repeater.publicKeyHex.substring(repeater.publicKeyHex.length - 8)}>',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        repeater.pathLabel,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      if (repeater.hasLocation) ...[
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${repeater.latitude?.toStringAsFixed(4)}, ${repeater.longitude?.toStringAsFixed(4)}',
-                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '<${repeater.publicKeyHex.substring(0, 8)}...${repeater.publicKeyHex.substring(repeater.publicKeyHex.length - 8)}>',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      repeater.pathLabel,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                    if (repeater.hasLocation) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 14,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${repeater.latitude?.toStringAsFixed(4)}, ${repeater.longitude?.toStringAsFixed(4)}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ],
-                  ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-              Text(
-                l10n.repeater_managementTools,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              // Status button
-              _buildManagementCard(
-                context,
-                icon: Icons.analytics,
-                title: l10n.repeater_status,
-                subtitle: l10n.repeater_statusSubtitle,
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RepeaterStatusScreen(
-                        repeater: repeater,
-                        password: password,
-                      ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              l10n.repeater_managementTools,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            // Status button
+            _buildManagementCard(
+              context,
+              icon: Icons.analytics,
+              title: l10n.repeater_status,
+              subtitle: l10n.repeater_statusSubtitle,
+              color: Colors.blue,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RepeaterStatusScreen(
+                      repeater: repeater,
+                      password: password,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              // Telemetry button
-              _buildManagementCard(
-                context,
-                icon: Icons.bar_chart_sharp,
-                title: l10n.repeater_telemetry,
-                subtitle: l10n.repeater_telemetrySubtitle,
-                color: Colors.teal,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TelemetryScreen(
-                        repeater: repeater,
-                        password: password,
-                      ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            // Telemetry button
+            _buildManagementCard(
+              context,
+              icon: Icons.bar_chart_sharp,
+              title: l10n.repeater_telemetry,
+              subtitle: l10n.repeater_telemetrySubtitle,
+              color: Colors.teal,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        TelemetryScreen(repeater: repeater, password: password),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            // CLI button
+            _buildManagementCard(
+              context,
+              icon: Icons.terminal,
+              title: l10n.repeater_cli,
+              subtitle: l10n.repeater_cliSubtitle,
+              color: Colors.green,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RepeaterCliScreen(
+                      repeater: repeater,
+                      password: password,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-              // CLI button
-              _buildManagementCard(
-                context,
-                icon: Icons.terminal,
-                title: l10n.repeater_cli,
-                subtitle: l10n.repeater_cliSubtitle,
-                color: Colors.green,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RepeaterCliScreen(
-                        repeater: repeater,
-                        password: password,
-                      ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            // Settings button
+            _buildManagementCard(
+              context,
+              icon: Icons.settings,
+              title: l10n.repeater_settings,
+              subtitle: l10n.repeater_settingsSubtitle,
+              color: Colors.orange,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RepeaterSettingsScreen(
+                      repeater: repeater,
+                      password: password,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-              // Settings button
-              _buildManagementCard(
-                context,
-                icon: Icons.settings,
-                title: l10n.repeater_settings,
-                subtitle: l10n.repeater_settingsSubtitle,
-                color: Colors.orange,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RepeaterSettingsScreen(
-                        repeater: repeater,
-                        password: password,
-                      ),
-                    ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -214,10 +234,7 @@ class RepeaterHubScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                   ],
                 ),

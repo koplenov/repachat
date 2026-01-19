@@ -253,7 +253,8 @@
     }
   },
   "contacts_manageRepeater": "Manage Repeater",
-  "contacts_roomLogin": "Room Login",
+  "contacts_manageRoom": "Manage Room Server",
+  "contacts_roomLogin": "Room Server Login",
   "contacts_openChat": "Open Chat",
   "contacts_editGroup": "Edit Group",
   "contacts_deleteGroup": "Delete Group",
@@ -697,7 +698,7 @@
   "dialog_disconnectConfirm": "Are you sure you want to disconnect from this device?",
 
   "login_repeaterLogin": "Repeater Login",
-  "login_roomLogin": "Room Login",
+  "login_roomLogin": "Room Server Login",
   "login_password": "Password",
   "login_enterPassword": "Enter password",
   "login_savePassword": "Save password",
@@ -760,6 +761,7 @@
   "path_setPath": "Set Path",
 
   "repeater_management": "Repeater Management",
+  "room_management": "Room Server Management",
   "repeater_managementTools": "Management Tools",
   "repeater_status": "Status",
   "repeater_statusSubtitle": "View repeater status, stats, and neighbors",

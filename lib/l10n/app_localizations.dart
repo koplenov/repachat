@@ -1284,10 +1284,16 @@ abstract class AppLocalizations {
   /// **'Manage Repeater'**
   String get contacts_manageRepeater;
 
+  /// No description provided for @contacts_manageRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Room Server'**
+  String get contacts_manageRoom;
+
   /// No description provided for @contacts_roomLogin.
   ///
   /// In en, this message translates to:
-  /// **'Room Login'**
+  /// **'Room Server Login'**
   String get contacts_roomLogin;
 
   /// No description provided for @contacts_openChat.
@@ -2672,7 +2678,7 @@ abstract class AppLocalizations {
   /// No description provided for @login_roomLogin.
   ///
   /// In en, this message translates to:
-  /// **'Room Login'**
+  /// **'Room Server Login'**
   String get login_roomLogin;
 
   /// No description provided for @login_password.
@@ -2866,6 +2872,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Repeater Management'**
   String get repeater_management;
+
+  /// No description provided for @room_management.
+  ///
+  /// In en, this message translates to:
+  /// **'Room Server Management'**
+  String get room_management;
 
   /// No description provided for @repeater_managementTools.
   ///
