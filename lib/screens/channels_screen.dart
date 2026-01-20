@@ -917,10 +917,11 @@ class _ChannelsScreenState extends State<ChannelsScreen>
                                 if (hashtag.startsWith('#')) {
                                   hashtag = hashtag.substring(1);
                                 }
-                                final channelName = '#$hashtag';
+                                final String channelName;
                                 
                                 final Uint8List psk;
                                 if (isRegularHashtag) {
+                                  channelName = '#$hashtag';
                                   // Regular hashtag - public derivation using SHA256
                                   psk = Channel.derivePskFromHashtag(hashtag);
                                 } else {
@@ -931,6 +932,7 @@ class _ChannelsScreenState extends State<ChannelsScreen>
                                     );
                                     return;
                                   }
+                                  channelName = '${selectedCommunity!.name} #$hashtag';
                                   psk = selectedCommunity!.deriveCommunityHashtagPsk(hashtag);
                                   // Track in community's hashtag list
                                   await _communityStore.addHashtagChannel(selectedCommunity!.id, hashtag);
