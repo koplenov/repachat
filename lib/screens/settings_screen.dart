@@ -433,16 +433,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final latController = TextEditingController();
     final lonController = TextEditingController();
     final intervalController = TextEditingController();
-    intervalController.text = "900";
     latController.text = connector.selfLatitude?.toStringAsFixed(6) ?? '';
     lonController.text = connector.selfLongitude?.toStringAsFixed(6) ?? '';
-    bool hasGPS = connector.currentCustomVars!.isNotEmpty
-        ? connector.currentCustomVars!.containsKey("gps")
-        : false;
 
-    bool isGPSEnabled = hasGPS
-        ? connector.currentCustomVars!["gps"] == "1"
-        : false;
+    // Safe access to custom vars - may be null before device responds
+    final customVars = connector.currentCustomVars ?? {};
+    final bool hasGPS = customVars.containsKey("gps");
+    bool isGPSEnabled = customVars["gps"] == "1";
+
+    // Read current interval or default to 900 (15 minutes)
+    final currentInterval = int.tryParse(customVars["gps_interval"] ?? "") ?? 900;
+    intervalController.text = currentInterval.toString();
 
     showDialog(
       context: context,
@@ -521,7 +522,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
 
                   final interval = int.tryParse(intervalText);
-                  if (interval == null || interval < 60) {
+                  if (interval == null || interval < 60 || interval >= 86400) {
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
