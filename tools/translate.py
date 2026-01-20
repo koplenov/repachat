@@ -10,6 +10,7 @@ Translates ARB/JSON localization values using a local Ollama model, while:
 - printing progress as it runs
 
 Usage:
+  # Translate all strings:
   python translate_arb_with_ollama.py \
     --in /home/zjs81/Desktop/meshcore-open/lib/l10n/app_en.arb \
     --out /home/zjs81/Desktop/meshcore-open/lib/l10n/app_es.arb \
@@ -17,12 +18,28 @@ Usage:
     --model ministral-3:latest \
     --temperature 0 \
     --concurrency 4
+
+  # Translate only missing/untranslated strings:
+  python translate_arb_with_ollama.py \
+    --in /home/zjs81/Desktop/meshcore-open/lib/l10n/app_en.arb \
+    --out /home/zjs81/Desktop/meshcore-open/lib/l10n/app_es.arb \
+    --to-locale es \
+    --missing-only \
+    --model ministral-3:latest
+
+  # Translate all locales (missing strings only):
+  python translate_arb_with_ollama.py \
+    --in /home/zjs81/Desktop/meshcore-open/lib/l10n/app_en.arb \
+    --l10n-dir /home/zjs81/Desktop/meshcore-open/lib/l10n \
+    --missing-only \
+    --model ministral-3:latest
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import time
@@ -448,11 +465,48 @@ def fmt_duration(seconds: float) -> str:
     return f"{h}h {m2}m"
 
 
+def find_missing_keys(source_data: Dict[str, Any], target_data: Dict[str, Any]) -> List[str]:
+    """Find keys that are in source but not in target (excluding metadata keys)."""
+    missing = []
+    for key in source_data:
+        if key == "@@locale":
+            continue
+        if key.startswith("@"):
+            continue
+        if key not in target_data:
+            missing.append(key)
+    return missing
+
+
+def get_all_locale_files(l10n_dir: str, template_file: str) -> List[Tuple[str, str]]:
+    """Find all locale .arb files in the directory, excluding the template.
+    
+    Returns list of (locale_code, file_path) tuples.
+    """
+    locales = []
+    template_basename = os.path.basename(template_file)
+    
+    for filename in os.listdir(l10n_dir):
+        if not filename.endswith('.arb'):
+            continue
+        if filename == template_basename:
+            continue
+        # Extract locale from filename like app_es.arb -> es
+        if filename.startswith('app_') and filename.endswith('.arb'):
+            locale = filename[4:-4]  # Remove 'app_' prefix and '.arb' suffix
+            filepath = os.path.join(l10n_dir, filename)
+            locales.append((locale, filepath))
+    
+    return sorted(locales)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--in", dest="in_path", required=True, help="Input .arb/.json file path")
-    ap.add_argument("--out", dest="out_path", required=True, help="Output .arb/.json file path")
-    ap.add_argument("--to-locale", required=True, help="Target locale code, e.g. es, fr, de")
+    ap.add_argument("--in", dest="in_path", required=True, help="Input .arb/.json file path (source/template)")
+    ap.add_argument("--out", dest="out_path", default=None, help="Output .arb/.json file path (required unless using --l10n-dir)")
+    ap.add_argument("--to-locale", default=None, help="Target locale code, e.g. es, fr, de (required unless using --l10n-dir)")
+    ap.add_argument("--l10n-dir", default=None, help="Directory containing locale .arb files. When set, translates all locales.")
+    ap.add_argument("--missing-only", action="store_true", help="Only translate keys missing from target file")
     ap.add_argument("--target-lang", default=None, help="Target language name for the model, e.g. Spanish (defaults from locale)")
     ap.add_argument("--model", default="gemma3:4b", help="Ollama model name")
     ap.add_argument("--fallback-model", default=None, help="Larger model to use for low-confidence translations")
@@ -504,19 +558,119 @@ def main() -> int:
         "vi": "Vietnamese",
         "id": "Indonesian",
     }
-    target_lang = args.target_lang or locale_map.get(args.to_locale, args.to_locale)
 
+    # Read source/template file
     try:
         with open(args.in_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+            source_data = json.load(f)
     except Exception as e:
         print(f"Failed to read input: {e}", file=sys.stderr)
         return 2
 
-    if not isinstance(data, dict):
+    if not isinstance(source_data, dict):
         print("Input JSON must be an object at top-level.", file=sys.stderr)
         return 2
 
+    # If --l10n-dir is provided, process all locale files
+    if args.l10n_dir:
+        locales = get_all_locale_files(args.l10n_dir, args.in_path)
+        if not locales:
+            print(f"No locale files found in {args.l10n_dir}", file=sys.stderr)
+            return 1
+        
+        print(f"Found {len(locales)} locale file(s) to process")
+        
+        total_translated = 0
+        for locale_code, locale_path in locales:
+            target_lang = locale_map.get(locale_code, locale_code)
+            
+            # Read existing target file
+            try:
+                with open(locale_path, "r", encoding="utf-8") as f:
+                    target_data = json.load(f)
+            except Exception as e:
+                print(f"  [{locale_code}] Failed to read {locale_path}: {e}")
+                continue
+            
+            if args.missing_only:
+                missing_keys = find_missing_keys(source_data, target_data)
+                if not missing_keys:
+                    print(f"  [{locale_code}] No missing keys")
+                    continue
+                print(f"  [{locale_code}] {len(missing_keys)} missing key(s): {', '.join(missing_keys[:5])}{'...' if len(missing_keys) > 5 else ''}")
+            else:
+                missing_keys = None
+            
+            # Run translation for this locale
+            result = translate_locale(
+                source_data=source_data,
+                target_data=target_data,
+                target_locale=locale_code,
+                target_lang=target_lang,
+                out_path=locale_path,
+                args=args,
+                locale_map=locale_map,
+                missing_keys=missing_keys,
+            )
+            total_translated += result
+        
+        print(f"\nTotal: {total_translated} string(s) translated across {len(locales)} locale(s)")
+        return 0
+    
+    # Single locale mode - validate required args
+    if not args.out_path:
+        print("--out is required when not using --l10n-dir", file=sys.stderr)
+        return 1
+    if not args.to_locale:
+        print("--to-locale is required when not using --l10n-dir", file=sys.stderr)
+        return 1
+    
+    target_lang = args.target_lang or locale_map.get(args.to_locale, args.to_locale)
+
+    # Read existing target file if --missing-only and file exists
+    target_data: Dict[str, Any] = {}
+    missing_keys: Optional[List[str]] = None
+    if args.missing_only:
+        if os.path.exists(args.out_path):
+            try:
+                with open(args.out_path, "r", encoding="utf-8") as f:
+                    target_data = json.load(f)
+                missing_keys = find_missing_keys(source_data, target_data)
+                if not missing_keys:
+                    print(f"No missing keys in {args.out_path}")
+                    return 0
+                print(f"Found {len(missing_keys)} missing key(s) to translate")
+            except Exception as e:
+                print(f"Failed to read target file: {e}", file=sys.stderr)
+                return 2
+        else:
+            print(f"Target file {args.out_path} does not exist. Will translate all strings.")
+
+    result = translate_locale(
+        source_data=source_data,
+        target_data=target_data,
+        target_locale=args.to_locale,
+        target_lang=target_lang,
+        out_path=args.out_path,
+        args=args,
+        locale_map=locale_map,
+        missing_keys=missing_keys,
+    )
+    return 0 if result >= 0 else 1
+
+
+def translate_locale(
+    source_data: Dict[str, Any],
+    target_data: Dict[str, Any],
+    target_locale: str,
+    target_lang: str,
+    out_path: str,
+    args,
+    locale_map: Dict[str, str],
+    missing_keys: Optional[List[str]] = None,
+) -> int:
+    """Translate a single locale. Returns number of strings translated."""
+    
     cfg = OllamaConfig(
         host=args.host,
         model=args.model,
@@ -540,17 +694,34 @@ def main() -> int:
             top_p=args.top_p,
         )
 
-    out_data: Dict[str, Any] = dict(data)
-    out_data["@@locale"] = args.to_locale
+    # Start with target data (preserves existing translations) or source data
+    if target_data:
+        out_data: Dict[str, Any] = dict(target_data)
+    else:
+        out_data: Dict[str, Any] = dict(source_data)
+    out_data["@@locale"] = target_locale
 
-    items: List[Tuple[str, str]] = [(k, v) for k, v in data.items() if is_translatable_entry(k, v)]
+    # Build list of items to translate
+    if missing_keys is not None:
+        # Only translate missing keys
+        items: List[Tuple[str, str]] = [
+            (k, source_data[k]) for k in missing_keys 
+            if is_translatable_entry(k, source_data.get(k))
+        ]
+        # Also copy over any metadata keys for missing items
+        for key in missing_keys:
+            meta_key = f"@{key}"
+            if meta_key in source_data:
+                out_data[meta_key] = source_data[meta_key]
+    else:
+        items: List[Tuple[str, str]] = [(k, v) for k, v in source_data.items() if is_translatable_entry(k, v)]
     
     # Apply manual translations first
     manual_count = 0
     items_to_translate: List[Tuple[str, str]] = []
     for k, v in items:
-        if k in MANUAL_TRANSLATIONS and args.to_locale in MANUAL_TRANSLATIONS[k]:
-            out_data[k] = MANUAL_TRANSLATIONS[k][args.to_locale]
+        if k in MANUAL_TRANSLATIONS and target_locale in MANUAL_TRANSLATIONS[k]:
+            out_data[k] = MANUAL_TRANSLATIONS[k][target_locale]
             manual_count += 1
         else:
             items_to_translate.append((k, v))
@@ -560,8 +731,8 @@ def main() -> int:
     
     total = len(items_to_translate)
     if total == 0 and manual_count == 0:
-        print("No translatable string entries found (excluding @@locale and @metadata).", file=sys.stderr)
-        return 1
+        print("No translatable string entries found (excluding @@locale and @metadata).")
+        return 0
     
     if total == 0:
         print("All strings handled by manual translations.")
@@ -705,18 +876,18 @@ def main() -> int:
 
     if args.dry_run:
         print("Dry run: not writing output file.")
-        return 0
+        return translated_ok
 
     try:
-        with open(args.out_path, "w", encoding="utf-8") as f:
+        with open(out_path, "w", encoding="utf-8") as f:
             json.dump(out_data, f, ensure_ascii=False, indent=2)
             f.write("\n")
     except Exception as e:
         print(f"Failed to write output: {e}", file=sys.stderr)
-        return 2
+        return -1
 
-    print(f"Wrote: {args.out_path}")
-    return 0
+    print(f"Wrote: {out_path}")
+    return translated_ok
 
 
 if __name__ == "__main__":
