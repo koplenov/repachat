@@ -650,7 +650,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get contacts_manageRepeater => 'Gerenciar Repetidor';
 
   @override
-  String get contacts_manageRoom => 'Manage Room Server';
+  String get contacts_manageRoom => 'Gerenciar Servidor de Sala';
 
   @override
   String get contacts_roomLogin => 'Login no Quarto';
@@ -1589,7 +1589,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get repeater_management => 'Gerenciamento de Repetidor';
 
   @override
-  String get room_management => 'Room Server Management';
+  String get room_management => 'Gerenciamento de Servidor de Sala';
 
   @override
   String get repeater_managementTools => 'Ferramentas de Gerenciamento';

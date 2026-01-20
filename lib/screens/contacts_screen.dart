@@ -27,6 +27,11 @@ import 'map_screen.dart';
 import 'repeater_hub_screen.dart';
 import 'settings_screen.dart';
 
+enum RoomLoginDestination {
+  chat,
+  management,
+}
+
 class ContactsScreen extends StatefulWidget {
   final bool hideBackButton;
 
@@ -277,8 +282,9 @@ class _ContactsScreenState extends State<ContactsScreen>
           if (group.name.toLowerCase().contains(query)) return true;
           for (final key in group.memberKeys) {
             final contact = contactsByKey[key];
-            if (contact != null && matchesContactQuery(contact, query))
+            if (contact != null && matchesContactQuery(contact, query)) {
               return true;
+            }
           }
           return false;
         })
@@ -422,7 +428,7 @@ class _ContactsScreenState extends State<ContactsScreen>
     if (contact.type == advTypeRepeater) {
       _showRepeaterLogin(context, contact);
     } else if (contact.type == advTypeRoom) {
-      _showRoomLogin(context, contact, false);
+      _showRoomLogin(context, contact, RoomLoginDestination.chat);
     } else {
       context.read<MeshCoreConnector>().markContactRead(contact.publicKeyHex);
       Navigator.push(
@@ -469,18 +475,21 @@ class _ContactsScreenState extends State<ContactsScreen>
     );
   }
 
-  void _showRoomLogin(BuildContext context, Contact room, bool settings) {
+  void _showRoomLogin(
+    BuildContext context,
+    Contact room,
+    RoomLoginDestination destination,
+  ) {
     showDialog(
       context: context,
       builder: (context) => RoomLoginDialog(
         room: room,
         onLogin: (password) {
-          // Navigate to chat screen after successful login
           context.read<MeshCoreConnector>().markContactRead(room.publicKeyHex);
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => settings
+              builder: (context) => destination == RoomLoginDestination.management
                   ? RepeaterHubScreen(repeater: room, password: password)
                   : ChatScreen(contact: room),
             ),
@@ -745,7 +754,7 @@ class _ContactsScreenState extends State<ContactsScreen>
           children: [
             if (isRepeater)
               ListTile(
-                leading: const Icon(Icons.settings, color: Colors.orange),
+                leading: const Icon(Icons.cell_tower, color: Colors.orange),
                 title: Text(context.l10n.contacts_manageRepeater),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -758,15 +767,15 @@ class _ContactsScreenState extends State<ContactsScreen>
                 title: Text(context.l10n.contacts_roomLogin),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  _showRoomLogin(context, contact, false);
+                  _showRoomLogin(context, contact, RoomLoginDestination.chat);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.settings, color: Colors.orange),
+                leading: const Icon(Icons.room_preferences, color: Colors.orange),
                 title: Text(context.l10n.room_management),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  _showRoomLogin(context, contact, true);
+                  _showRoomLogin(context, contact, RoomLoginDestination.management);
                 },
               ),
             ] else
@@ -917,10 +926,12 @@ class _ContactTile extends StatelessWidget {
     final now = DateTime.now();
     final diff = now.difference(lastSeen);
 
-    if (diff.isNegative || diff.inMinutes < 5)
+    if (diff.isNegative || diff.inMinutes < 5) {
       return context.l10n.contacts_lastSeenNow;
-    if (diff.inMinutes < 60)
+    }
+    if (diff.inMinutes < 60) {
       return context.l10n.contacts_lastSeenMinsAgo(diff.inMinutes);
+    }
     if (diff.inHours < 24) {
       final hours = diff.inHours;
       return hours == 1

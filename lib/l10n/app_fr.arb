@@ -1349,6 +1349,6 @@
   "channels_scanQrCodeComingSoon": "Bientôt disponible",
   "channels_enterHashtag": "Entrez le hashtag",
   "channels_hashtagHint": "ex. #équipe",
-  "contacts_manageRoom": "Gérer le serveur de la pièce {name}",
+  "contacts_manageRoom": "Gérer le serveur de salle",
   "room_management": "Gestion du serveur de pièce"
 }

@@ -1349,6 +1349,6 @@
   "channels_scanQrCodeComingSoon": "Em breve",
   "channels_enterHashtag": "Insira hashtag",
   "channels_hashtagHint": "ex. #equipe",
-  "contacts_manageRoom": "Gerenciar Servidor de Sala {name} ({count})",
+  "contacts_manageRoom": "Gerenciar Servidor de Sala",
   "room_management": "Gerenciamento de Servidor de Sala"
 }
