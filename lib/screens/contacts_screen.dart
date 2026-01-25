@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:meshcore_open/widgets/path_trace_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../connector/meshcore_connector.dart';
@@ -51,11 +54,14 @@ class _ContactsScreenState extends State<ContactsScreen>
   final ContactGroupStore _groupStore = ContactGroupStore();
   List<ContactGroup> _groups = [];
   Timer? _searchDebounce;
-
+  StreamSubscription<Uint8List>? _frameSubscription;
+  Uint8List _tagData = Uint8List(4);
+  
   @override
   void initState() {
     super.initState();
     _loadGroups();
+    _setupFrameListener();
   }
 
   @override
@@ -63,6 +69,44 @@ class _ContactsScreenState extends State<ContactsScreen>
     _searchDebounce?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _setupFrameListener() {
+    final connector = Provider.of<MeshCoreConnector>(context, listen: false);
+
+    // Listen for incoming text messages from the repeater
+    _frameSubscription = connector.receivedFrames.listen((frame) {
+      if (frame.isEmpty) return;
+
+      if (frame[0] == respCodeSent) {
+        _tagData = frame.sublist(2, 6);
+        print("Stored tag data: $_tagData");
+      }
+
+      // Check if it's a binary response
+      if (frame[0] == pushCodeTraceData && listEquals(frame.sublist(4, 8), _tagData)) {
+        if (!mounted) return;
+        _handleTraceResponse(frame);
+      }
+    });
+  }
+
+  Future<void> _handleTraceResponse(Uint8List frame)async {
+    final buffer = BufferReader(frame);
+    buffer.skipBytes(2); // Skip push code and reserved byte
+    int pathLength = buffer.readUInt8();
+    buffer.skipBytes(5); // Skip Flag byte and tag data
+    buffer.skipBytes(4); // Skip auth code
+    Uint8List pathData = buffer.readBytes(pathLength);
+    Uint8List snrData = buffer.readRemainingBytes();
+    print("Received path data length: $pathLength, SNR data length: ${snrData.length}");
+    showDialog(
+      context: context,
+      builder: (context) => PathTraceDialog(
+        pathData: pathData,
+        snrData: snrData,
+      ),
+    );
   }
 
   Future<void> _loadGroups() async {
@@ -757,11 +801,12 @@ class _ContactsScreenState extends State<ContactsScreen>
                 leading: const Icon(Icons.radar, color: Colors.green),
                 title: Text("Ping"),
                 onTap: () async {
+                        Navigator.pop(sheetContext);
                         final frame = buildTraceReq(
                           DateTime.now().millisecondsSinceEpoch ~/ 1000,
                           0,
                           0,
-                          payload: contact.publicKey.sublist(0,1),
+                          payload: Uint8List.fromList([0x85,0x91,0x07,0x91,0x85]) //contact.publicKey.sublist(0,1),
                         );
                         await connector.sendFrame(frame);
                 }

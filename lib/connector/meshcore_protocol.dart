@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:typed_data';
 
 // Buffer Reader - sequential binary data reader with pointer tracking
@@ -16,6 +17,10 @@ class BufferReader {
     final data = _buffer.sublist(_pointer, _pointer + count);
     _pointer += count;
     return data;
+  }
+
+  void skipBytes(int count) {
+    _pointer += count;
   }
 
   Uint8List readRemainingBytes() => readBytes(remaining);
