@@ -139,7 +139,6 @@ class Contact {
         }
       }
     }
-    print(traceBytes);
     return traceBytes;
   }
 
