@@ -963,7 +963,7 @@ class MeshCoreConnector extends ChangeNotifier {
       await sendFrame(buildGetBattAndStorageFrame());
     } catch (e) {
       // Reset flag on error to allow retry
-      _handleDisconnection();
+      // Don't disconnect on battery request failure - it may be transient
       _batteryRequested = false;
     }
   }

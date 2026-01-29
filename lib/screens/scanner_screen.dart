@@ -16,25 +16,37 @@ class ScannerScreen extends StatefulWidget {
 }
 
 class _ScannerScreenState extends State<ScannerScreen> {
-  bool changedNavgation = false;  
+  bool _changedNavigation = false;
+  late final VoidCallback _connectionListener;
 
   @override
   void initState() {
     super.initState();
     final connector = Provider.of<MeshCoreConnector>(context, listen: false);
     
-    connector.addListener(() {
+    _connectionListener = () {
       if (connector.state == MeshCoreConnectionState.disconnected) {
-        changedNavgation = false;
-      }else if (connector.state == MeshCoreConnectionState.connected && !changedNavgation) {
-        changedNavgation = true;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const ContactsScreen(),
-          ),
-        );
+        _changedNavigation = false;
+      } else if (connector.state == MeshCoreConnectionState.connected && !_changedNavigation) {
+        _changedNavigation = true;
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const ContactsScreen(),
+            ),
+          );
+        }
       }
-    });
+    };
+    
+    connector.addListener(_connectionListener);
+  }
+
+  @override
+  void dispose() {
+    final connector = Provider.of<MeshCoreConnector>(context, listen: false);
+    connector.removeListener(_connectionListener);
+    super.dispose();
   }
 
   @override
