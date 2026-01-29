@@ -2692,4 +2692,43 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Nouveau groupe';
+
+  @override
+  String get pathTrace_you => 'Vous';
+
+  @override
+  String get pathTrace_failed => 'Traçage du chemin échoué.';
+
+  @override
+  String get pathTrace_notAvailable => 'Tracé de chemin non disponible.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Actualiser Path Trace';
+
+  @override
+  String get contacts_pathTrace => 'Traçage de chemin';
+
+  @override
+  String get contacts_ping => 'Ping';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Tracer le chemin vers le répéteur';
+
+  @override
+  String get contacts_repeaterPing => 'Pinguer le répéteur';
+
+  @override
+  String get contacts_roomPathTrace =>
+      'Traçage du chemin vers le serveur de la salle';
+
+  @override
+  String get contacts_roomPing => 'Pinguer le serveur de la salle';
+
+  @override
+  String get contacts_chatTraceRoute => 'Tracer le chemin';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Tracer l\'itinéraire vers $name';
+  }
 }

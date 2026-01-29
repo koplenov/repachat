@@ -1533,5 +1533,24 @@
   "community_regenerateSecret": "Zobraziť nový tajný kód",
   "community_scanToUpdateSecret": "Skáňte nový QR kód na aktualizáciu tajného hesla pre \"{name}\"",
   "community_updateSecret": "Aktualizovať tajné heslo",
-  "community_secretUpdated": "Zmena tajnej slova pre \"{name}\""
+  "community_secretUpdated": "Zmena tajnej slova pre \"{name}\"",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Vy",
+  "pathTrace_failed": "Sledovanie cesty zlyhalo.",
+  "pathTrace_notAvailable": "Path trace nie je k dispozícii.",
+  "pathTrace_refreshTooltip": "Obnoviť Path Trace.",
+  "contacts_pathTrace": "Sledovanie lúčov",
+  "contacts_ping": "Pingovať",
+  "contacts_repeaterPathTrace": "Sledovanie cesty k opakovaču",
+  "contacts_repeaterPing": "Pingovať opakovač",
+  "contacts_roomPathTrace": "Sledovanie cesty k serveru miestnosti",
+  "contacts_roomPing": "Ping server miestnosti",
+  "contacts_chatTraceRoute": "Sledovať trasu lúča",
+  "contacts_pathTraceTo": "Sledovať trasu k {name}"
 }

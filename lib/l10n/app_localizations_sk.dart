@@ -2662,4 +2662,42 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Nová skupina';
+
+  @override
+  String get pathTrace_you => 'Vy';
+
+  @override
+  String get pathTrace_failed => 'Sledovanie cesty zlyhalo.';
+
+  @override
+  String get pathTrace_notAvailable => 'Path trace nie je k dispozícii.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Obnoviť Path Trace.';
+
+  @override
+  String get contacts_pathTrace => 'Sledovanie lúčov';
+
+  @override
+  String get contacts_ping => 'Pingovať';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Sledovanie cesty k opakovaču';
+
+  @override
+  String get contacts_repeaterPing => 'Pingovať opakovač';
+
+  @override
+  String get contacts_roomPathTrace => 'Sledovanie cesty k serveru miestnosti';
+
+  @override
+  String get contacts_roomPing => 'Ping server miestnosti';
+
+  @override
+  String get contacts_chatTraceRoute => 'Sledovať trasu lúča';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Sledovať trasu k $name';
+  }
 }

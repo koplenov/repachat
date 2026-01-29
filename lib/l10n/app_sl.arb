@@ -1533,5 +1533,24 @@
   "community_regenerate": "Preberi znova",
   "community_scanToUpdateSecret": "Skeniraj novo QR kodo za posodabljanje ključa za {name}",
   "community_updateSecret": "Ažuriraj ključ",
-  "community_secretUpdated": "Skrivnostno spremembo za \"{name}\""
+  "community_secretUpdated": "Skrivnostno spremembo za \"{name}\"",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Ti",
+  "pathTrace_failed": "Sledenje poti ni uspelo.",
+  "pathTrace_notAvailable": "Potni sled ni na voljo.",
+  "pathTrace_refreshTooltip": "Osveži Path Trace.",
+  "contacts_pathTrace": "Sledenje poti",
+  "contacts_ping": "Pingati",
+  "contacts_repeaterPathTrace": "Sledi poti do ponavljalnika",
+  "contacts_repeaterPing": "Pinguj ponavljalnik",
+  "contacts_roomPathTrace": "Sledenje poti do strežnika sobe",
+  "contacts_roomPing": "Ping strežnik sobe",
+  "contacts_chatTraceRoute": "Slediti poti žarkov",
+  "contacts_pathTraceTo": "Trace route to {name}"
 }

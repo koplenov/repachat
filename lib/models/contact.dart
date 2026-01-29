@@ -102,6 +102,46 @@ class Contact {
     return parts.join(',');
   }
 
+  String get shortPubKeyHex {
+    return "<${publicKeyHex.substring(0, 8)}...${publicKeyHex.substring(publicKeyHex.length - 8)}>";
+  }
+
+  Uint8List? get traceRouteBytes {
+    final pathBytes = _pathBytesForDisplay;
+    Uint8List? traceBytes;
+
+    if(pathLength <= 0) {
+      traceBytes = Uint8List(1);
+      traceBytes[0] = publicKey[0];
+      return traceBytes;
+    }
+
+    if(type == advTypeRepeater || type == advTypeRoom) {
+      final len = (pathBytes.length + pathBytes.length + 1);
+      traceBytes = Uint8List(len);
+      traceBytes[pathBytes.length] = publicKey[0];
+      for (int i = 0; i < pathBytes.length; i++) {
+        traceBytes[i] = pathBytes[i];
+        if (i < pathBytes.length) {
+          traceBytes[len-1-i] = pathBytes[i];
+        }
+      }
+    } else {
+      if(pathBytes.length < 2) {
+        return pathBytes[0] == 0 ? null : pathBytes;
+      }
+      final len = (pathBytes.length + pathBytes.length-1);
+      traceBytes = Uint8List(len);
+      for (int i = 0; i < pathBytes.length; i++) {
+        traceBytes[i] = pathBytes[i];
+        if (i < pathBytes.length-1) {
+          traceBytes[len-1-i] = pathBytes[i];
+        }
+      }
+    }
+    return traceBytes;
+  }
+
   Uint8List get _pathBytesForDisplay {
     if (pathOverride != null) {
       if (pathOverride! < 0) return Uint8List(0);

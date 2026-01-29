@@ -322,7 +322,9 @@ class _RepeaterLoginDialogState extends State<RepeaterLoginDialog> {
                     }
                   },
                   onSubmitted: (_) => _handleLogin(),
-                  autofocus: _passwordController.text.isEmpty,
+                  autofocus: !(defaultTargetPlatform == TargetPlatform.android ||
+                      defaultTargetPlatform == TargetPlatform.iOS) &&
+                     _passwordController.text.isEmpty,
                 ),
                 const SizedBox(height: 12),
                 CheckboxListTile(

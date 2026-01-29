@@ -1533,5 +1533,24 @@
   "community_regenerate": "Regeneer",
   "community_updateSecret": "Bijwerken Geheime",
   "community_secretUpdated": "Geheim gewijzigd voor \"{name}\"",
-  "community_scanToUpdateSecret": "Scan de nieuwe QR-code om het geheim voor \"{name}\" bij te werken"
+  "community_scanToUpdateSecret": "Scan de nieuwe QR-code om het geheim voor \"{name}\" bij te werken",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Jij",
+  "pathTrace_failed": "Padtrace mislukt.",
+  "pathTrace_notAvailable": "Padtrace niet beschikbaar.",
+  "pathTrace_refreshTooltip": "Path Trace vernieuwen.",
+  "contacts_pathTrace": "Pad Traceren",
+  "contacts_ping": "Pingen",
+  "contacts_repeaterPathTrace": "Pad traceren naar repeater",
+  "contacts_repeaterPing": "Ping repeater",
+  "contacts_roomPathTrace": "Padtrace naar room server",
+  "contacts_roomPing": "Ping kamer server",
+  "contacts_chatTraceRoute": "Route traceren",
+  "contacts_pathTraceTo": "Trace route to {name}"
 }

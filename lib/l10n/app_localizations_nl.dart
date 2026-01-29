@@ -2666,4 +2666,42 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Nieuwe groep';
+
+  @override
+  String get pathTrace_you => 'Jij';
+
+  @override
+  String get pathTrace_failed => 'Padtrace mislukt.';
+
+  @override
+  String get pathTrace_notAvailable => 'Padtrace niet beschikbaar.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Path Trace vernieuwen.';
+
+  @override
+  String get contacts_pathTrace => 'Pad Traceren';
+
+  @override
+  String get contacts_ping => 'Pingen';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Pad traceren naar repeater';
+
+  @override
+  String get contacts_repeaterPing => 'Ping repeater';
+
+  @override
+  String get contacts_roomPathTrace => 'Padtrace naar room server';
+
+  @override
+  String get contacts_roomPing => 'Ping kamer server';
+
+  @override
+  String get contacts_chatTraceRoute => 'Route traceren';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Trace route to $name';
+  }
 }

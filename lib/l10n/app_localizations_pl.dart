@@ -2674,4 +2674,43 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Nowa grupa';
+
+  @override
+  String get pathTrace_you => 'Ty';
+
+  @override
+  String get pathTrace_failed => 'Śledzenie ścieżki nie powiodło się.';
+
+  @override
+  String get pathTrace_notAvailable => 'Ścieżka śledzenia niedostępna.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Odśwież ścieżkę.';
+
+  @override
+  String get contacts_pathTrace => 'Śledzenie Ścieżek';
+
+  @override
+  String get contacts_ping => 'Pingować';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Śledzenie ścieżki do repeatera';
+
+  @override
+  String get contacts_repeaterPing => 'Repeater pingowy';
+
+  @override
+  String get contacts_roomPathTrace =>
+      'Śledzenie ścieżki do serwera pokojowego';
+
+  @override
+  String get contacts_roomPing => 'Pinguj serwer pokoju';
+
+  @override
+  String get contacts_chatTraceRoute => 'Śledź trasę promienia';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Śledź trasę do $name';
+  }
 }

@@ -2531,4 +2531,42 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => '新组';
+
+  @override
+  String get pathTrace_you => '你';
+
+  @override
+  String get pathTrace_failed => '路径追踪失败。';
+
+  @override
+  String get pathTrace_notAvailable => '路径追踪不可用';
+
+  @override
+  String get pathTrace_refreshTooltip => '刷新路径追踪';
+
+  @override
+  String get contacts_pathTrace => '路径追踪';
+
+  @override
+  String get contacts_ping => 'ping';
+
+  @override
+  String get contacts_repeaterPathTrace => '路径追踪到中继器';
+
+  @override
+  String get contacts_repeaterPing => 'Ping 中继器';
+
+  @override
+  String get contacts_roomPathTrace => '路径追踪至房间服务器';
+
+  @override
+  String get contacts_roomPing => 'Ping 房间服务器';
+
+  @override
+  String get contacts_chatTraceRoute => '路径追踪';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return '追踪路由到 $name';
+  }
 }

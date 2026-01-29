@@ -774,5 +774,24 @@
   "chat_openLink": "Открыть ссылку?",
   "chat_openLinkConfirmation": "Хотите открыть эту ссылку в вашем браузере?",
   "neighbors_heardAgo": "Слушал(а): {time} назад",
-  "chat_invalidLink": "Неправильный формат ссылки"
+  "chat_invalidLink": "Неправильный формат ссылки",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Вы",
+  "pathTrace_failed": "Путь трассировки не выполнен.",
+  "pathTrace_notAvailable": "Трассировка пути недоступна.",
+  "pathTrace_refreshTooltip": "Обновить Path Trace",
+  "contacts_pathTrace": "Трассировка пути",
+  "contacts_ping": "Пинговать",
+  "contacts_repeaterPathTrace": "Отследить путь к ретранслятору",
+  "contacts_repeaterPing": "Пинговать повторитель",
+  "contacts_roomPathTrace": "Трассировка пути к серверу комнаты",
+  "contacts_roomPing": "Пинговать сервер комнаты",
+  "contacts_chatTraceRoute": "Трассировка маршрута",
+  "contacts_pathTraceTo": "Показать маршрут к {name}"
 }

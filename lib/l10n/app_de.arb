@@ -1533,5 +1533,24 @@
   "community_regenerateSecret": "Neu generieren Sie das Geheimnis",
   "community_secretUpdated": "Geheime für \"{name}\" aktualisiert",
   "community_scanToUpdateSecret": "Scannen Sie den neuen QR-Code, um das Geheimnis für \"{name}\" zu aktualisieren.",
-  "community_updateSecret": "Aktualisieren Sie das Geheimnis"
+  "community_updateSecret": "Aktualisieren Sie das Geheimnis",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_refreshTooltip": "Path Trace aktualisieren.",
+  "pathTrace_you": "Du",
+  "pathTrace_failed": "Pfadverfolgung fehlgeschlagen.",
+  "pathTrace_notAvailable": "Pfadverfolgung nicht verfügbar.",
+  "contacts_pathTrace": "Pfadverfolgung",
+  "contacts_ping": "Pingen",
+  "contacts_repeaterPathTrace": "Pfadverfolgung zum Repeater",
+  "contacts_repeaterPing": "Repeater pingen",
+  "contacts_roomPathTrace": "Pfadverfolgung zum Raumserver",
+  "contacts_roomPing": "Raumserver anpingen",
+  "contacts_pathTraceTo": "Route nach {name} verfolgen",
+  "contacts_chatTraceRoute": "Pfadverfolgungsroute"
 }

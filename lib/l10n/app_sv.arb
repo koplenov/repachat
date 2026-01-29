@@ -1533,5 +1533,24 @@
   "community_regenerateSecret": "Regenerera hemlig kod",
   "community_scanToUpdateSecret": "Skanna den nya QR-koden för att uppdatera hemligheten för \"{name}\"",
   "community_secretUpdated": "Hemlighet uppdaterad för \"{name}\"",
-  "community_updateSecret": "Uppdatera hemlighet"
+  "community_updateSecret": "Uppdatera hemlighet",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Du",
+  "pathTrace_failed": "Sökvägsföljning misslyckades.",
+  "pathTrace_notAvailable": "Path trace ej tillgänglig.",
+  "pathTrace_refreshTooltip": "Uppdatera Path Trace",
+  "contacts_pathTrace": "Path Trace",
+  "contacts_ping": "Ping",
+  "contacts_repeaterPathTrace": "Vägspårning till repeater",
+  "contacts_repeaterPing": "Ping-repeater",
+  "contacts_roomPathTrace": "Vägspårning till rumserver",
+  "contacts_roomPing": "Ping rumsserver",
+  "contacts_chatTraceRoute": "Spåra rutt",
+  "contacts_pathTraceTo": "Spåra rutt till {name}"
 }

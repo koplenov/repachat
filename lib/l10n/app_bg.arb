@@ -1533,5 +1533,24 @@
   "community_regenerate": "Регенерация",
   "community_updateSecret": "Актуализирай тайна",
   "community_scanToUpdateSecret": "Сканьорвайте новия QR код, за да актуализирате секрета за \"{name}\"",
-  "community_secretUpdated": "Секретно обновено за \"{name}\""
+  "community_secretUpdated": "Секретно обновено за \"{name}\"",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Вие",
+  "pathTrace_notAvailable": "Пътека за проследяване не е достъпна.",
+  "contacts_pathTrace": "Пътен проследяване",
+  "pathTrace_refreshTooltip": "Обнови Path Trace.",
+  "pathTrace_failed": "Пътят за проследяване не успя.",
+  "contacts_repeaterPing": "Пингване на повторителя",
+  "contacts_repeaterPathTrace": "Трасировка до повторител",
+  "contacts_ping": "Пинг",
+  "contacts_chatTraceRoute": "Трасиране на път",
+  "contacts_roomPathTrace": "Трасиране на път до съ",
+  "contacts_roomPing": "Ping на сървъра на стаята",
+  "contacts_pathTraceTo": "Проследи маршрут към {name}"
 }

@@ -156,6 +156,8 @@ class BleDebugLogService extends ChangeNotifier {
         return 'CMD_GET_RADIO_SETTINGS';
       case cmdSetCustomVar:
         return 'CMD_SET_CUSTOM_VAR';
+      case cmdSendTracePath:
+        return 'CMD_SEND_TRACE_PATH';
       default:
         return null;
     }
@@ -195,6 +197,8 @@ class BleDebugLogService extends ChangeNotifier {
         return 'RESP_CODE_CHANNEL_INFO';
       case respCodeRadioSettings:
         return 'RESP_CODE_RADIO_SETTINGS';
+      case pushCodeTraceData: 
+        return 'PUSH_CODE_TRACE_DATA';
       default:
         return null;
     }

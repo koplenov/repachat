@@ -466,7 +466,7 @@ def fmt_duration(seconds: float) -> str:
 
 
 def find_missing_keys(source_data: Dict[str, Any], target_data: Dict[str, Any]) -> List[str]:
-    """Find keys that are in source but not in target (excluding metadata keys)."""
+    """Find keys that are in source but not in target, or have empty values (excluding metadata keys)."""
     missing = []
     for key in source_data:
         if key == "@@locale":
@@ -474,6 +474,9 @@ def find_missing_keys(source_data: Dict[str, Any], target_data: Dict[str, Any]) 
         if key.startswith("@"):
             continue
         if key not in target_data:
+            missing.append(key)
+        elif isinstance(target_data.get(key), str) and target_data[key].strip() == "":
+            # Also include keys with empty string values
             missing.append(key)
     return missing
 

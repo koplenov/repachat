@@ -1533,5 +1533,24 @@
   "community_regenerateSecretConfirm": "重新生成“{name}”的秘密密钥？所有成员将需要扫描新的二维码才能继续沟通。",
   "community_scanToUpdateSecret": "扫描新的二维码更新\"{name}\"的密码",
   "community_updateSecret": "更新密钥",
-  "community_secretUpdated": "密码已更新为“{name}”"
+  "community_secretUpdated": "密码已更新为“{name}”",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "你",
+  "pathTrace_failed": "路径追踪失败。",
+  "pathTrace_notAvailable": "路径追踪不可用",
+  "pathTrace_refreshTooltip": "刷新路径追踪",
+  "contacts_pathTrace": "路径追踪",
+  "contacts_ping": "ping",
+  "contacts_repeaterPathTrace": "路径追踪到中继器",
+  "contacts_repeaterPing": "Ping 中继器",
+  "contacts_roomPathTrace": "路径追踪至房间服务器",
+  "contacts_roomPing": "Ping 房间服务器",
+  "contacts_chatTraceRoute": "路径追踪",
+  "contacts_pathTraceTo": "追踪路由到 {name}"
 }

@@ -2686,4 +2686,42 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Нова група';
+
+  @override
+  String get pathTrace_you => 'Ви';
+
+  @override
+  String get pathTrace_failed => 'Відстеження шляху не вдалося.';
+
+  @override
+  String get pathTrace_notAvailable => 'Трасування шляху недоступне.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Оновити Path Trace';
+
+  @override
+  String get contacts_pathTrace => 'Трасування шляхів';
+
+  @override
+  String get contacts_ping => 'Пінгувати';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Трасування шляху до повторювача';
+
+  @override
+  String get contacts_repeaterPing => 'Пінгувати повторювач';
+
+  @override
+  String get contacts_roomPathTrace => 'Трасування шляху до серверу кімнати';
+
+  @override
+  String get contacts_roomPing => 'Пінг сервера кімнати';
+
+  @override
+  String get contacts_chatTraceRoute => 'Трасування шляху';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Відстежити маршрут до $name';
+  }
 }

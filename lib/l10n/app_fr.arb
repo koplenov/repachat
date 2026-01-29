@@ -1533,5 +1533,24 @@
   "community_secretRegenerated": "Mot de passe secret régénéré pour \"{name}\"",
   "community_scanToUpdateSecret": "Scanner le nouveau code QR pour mettre à jour le mot de passe pour \"{name}\"",
   "community_updateSecret": "Mettre à jour le secret",
-  "community_secretUpdated": "Modification secrète mise à jour pour \"{name}\""
+  "community_secretUpdated": "Modification secrète mise à jour pour \"{name}\"",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Vous",
+  "pathTrace_refreshTooltip": "Actualiser Path Trace",
+  "pathTrace_failed": "Traçage du chemin échoué.",
+  "pathTrace_notAvailable": "Tracé de chemin non disponible.",
+  "contacts_pathTrace": "Traçage de chemin",
+  "contacts_repeaterPathTrace": "Tracer le chemin vers le répéteur",
+  "contacts_repeaterPing": "Pinguer le répéteur",
+  "contacts_roomPathTrace": "Traçage du chemin vers le serveur de la salle",
+  "contacts_chatTraceRoute": "Tracer le chemin",
+  "contacts_pathTraceTo": "Tracer l'itinéraire vers {name}",
+  "contacts_ping": "Ping",
+  "contacts_roomPing": "Pinguer le serveur de la salle"
 }

@@ -2679,4 +2679,42 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Новая группа';
+
+  @override
+  String get pathTrace_you => 'Вы';
+
+  @override
+  String get pathTrace_failed => 'Путь трассировки не выполнен.';
+
+  @override
+  String get pathTrace_notAvailable => 'Трассировка пути недоступна.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Обновить Path Trace';
+
+  @override
+  String get contacts_pathTrace => 'Трассировка пути';
+
+  @override
+  String get contacts_ping => 'Пинговать';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Отследить путь к ретранслятору';
+
+  @override
+  String get contacts_repeaterPing => 'Пинговать повторитель';
+
+  @override
+  String get contacts_roomPathTrace => 'Трассировка пути к серверу комнаты';
+
+  @override
+  String get contacts_roomPing => 'Пинговать сервер комнаты';
+
+  @override
+  String get contacts_chatTraceRoute => 'Трассировка маршрута';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Показать маршрут к $name';
+  }
 }

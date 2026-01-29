@@ -1533,5 +1533,24 @@
   "community_regenerateSecretConfirm": "Regeneruj tajny klucz dla \"{name}\"? Wszyscy członkowie będą musieli zeskanować nowy kod QR, aby kontynuować komunikację.",
   "community_scanToUpdateSecret": "Skanuj nowy kod QR, aby zaktualizować sekret dla \"{name}\"",
   "community_secretUpdated": "Hasło zaktualizowane dla \"{name}\"",
-  "community_updateSecret": "Zaktualizuj tajny klucz"
+  "community_updateSecret": "Zaktualizuj tajny klucz",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Ty",
+  "pathTrace_failed": "Śledzenie ścieżki nie powiodło się.",
+  "pathTrace_notAvailable": "Ścieżka śledzenia niedostępna.",
+  "contacts_pathTrace": "Śledzenie Ścieżek",
+  "contacts_ping": "Pingować",
+  "contacts_repeaterPathTrace": "Śledzenie ścieżki do repeatera",
+  "contacts_roomPathTrace": "Śledzenie ścieżki do serwera pokojowego",
+  "contacts_roomPing": "Pinguj serwer pokoju",
+  "pathTrace_refreshTooltip": "Odśwież ścieżkę.",
+  "contacts_repeaterPing": "Repeater pingowy",
+  "contacts_pathTraceTo": "Śledź trasę do {name}",
+  "contacts_chatTraceRoute": "Śledź trasę promienia"
 }

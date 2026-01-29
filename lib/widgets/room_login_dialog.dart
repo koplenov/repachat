@@ -261,7 +261,8 @@ class _RoomLoginDialogState extends State<RoomLoginDialog> {
                 child: CircularProgressIndicator(),
               ),
             )
-          : Column(
+          : SingleChildScrollView(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -292,7 +293,9 @@ class _RoomLoginDialogState extends State<RoomLoginDialog> {
                     ),
                   ),
                   onSubmitted: (_) => _handleLogin(),
-                  autofocus: _passwordController.text.isEmpty,
+                  autofocus: !(defaultTargetPlatform == TargetPlatform.android ||
+                      defaultTargetPlatform == TargetPlatform.iOS) &&
+                     _passwordController.text.isEmpty,
                 ),
                 const SizedBox(height: 12),
                 CheckboxListTile(
@@ -382,6 +385,7 @@ class _RoomLoginDialogState extends State<RoomLoginDialog> {
                 ),
               ],
             ),
+          ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),

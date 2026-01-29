@@ -2636,4 +2636,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'New group';
+
+  @override
+  String get pathTrace_you => 'You';
+
+  @override
+  String get pathTrace_failed => 'Path trace failed.';
+
+  @override
+  String get pathTrace_notAvailable => 'Path trace not available.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Refresh Path Trace.';
+
+  @override
+  String get contacts_pathTrace => 'Path Trace';
+
+  @override
+  String get contacts_ping => 'Ping';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Path trace to repeater';
+
+  @override
+  String get contacts_repeaterPing => 'Ping repeater';
+
+  @override
+  String get contacts_roomPathTrace => 'Path trace to room server';
+
+  @override
+  String get contacts_roomPing => 'Ping room server';
+
+  @override
+  String get contacts_chatTraceRoute => 'Path trace route';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Trace route to $name';
+  }
 }

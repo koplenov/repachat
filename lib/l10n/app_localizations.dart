@@ -4687,6 +4687,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New group'**
   String get listFilter_newGroup;
+
+  /// No description provided for @pathTrace_you.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get pathTrace_you;
+
+  /// No description provided for @pathTrace_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Path trace failed.'**
+  String get pathTrace_failed;
+
+  /// No description provided for @pathTrace_notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Path trace not available.'**
+  String get pathTrace_notAvailable;
+
+  /// No description provided for @pathTrace_refreshTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Path Trace.'**
+  String get pathTrace_refreshTooltip;
+
+  /// No description provided for @contacts_pathTrace.
+  ///
+  /// In en, this message translates to:
+  /// **'Path Trace'**
+  String get contacts_pathTrace;
+
+  /// No description provided for @contacts_ping.
+  ///
+  /// In en, this message translates to:
+  /// **'Ping'**
+  String get contacts_ping;
+
+  /// No description provided for @contacts_repeaterPathTrace.
+  ///
+  /// In en, this message translates to:
+  /// **'Path trace to repeater'**
+  String get contacts_repeaterPathTrace;
+
+  /// No description provided for @contacts_repeaterPing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ping repeater'**
+  String get contacts_repeaterPing;
+
+  /// No description provided for @contacts_roomPathTrace.
+  ///
+  /// In en, this message translates to:
+  /// **'Path trace to room server'**
+  String get contacts_roomPathTrace;
+
+  /// No description provided for @contacts_roomPing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ping room server'**
+  String get contacts_roomPing;
+
+  /// No description provided for @contacts_chatTraceRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Path trace route'**
+  String get contacts_chatTraceRoute;
+
+  /// No description provided for @contacts_pathTraceTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Trace route to {name}'**
+  String contacts_pathTraceTo(String name);
 }
 
 class _AppLocalizationsDelegate

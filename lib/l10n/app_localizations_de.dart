@@ -2681,4 +2681,42 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Neue Gruppe';
+
+  @override
+  String get pathTrace_you => 'Du';
+
+  @override
+  String get pathTrace_failed => 'Pfadverfolgung fehlgeschlagen.';
+
+  @override
+  String get pathTrace_notAvailable => 'Pfadverfolgung nicht verfügbar.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Path Trace aktualisieren.';
+
+  @override
+  String get contacts_pathTrace => 'Pfadverfolgung';
+
+  @override
+  String get contacts_ping => 'Pingen';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Pfadverfolgung zum Repeater';
+
+  @override
+  String get contacts_repeaterPing => 'Repeater pingen';
+
+  @override
+  String get contacts_roomPathTrace => 'Pfadverfolgung zum Raumserver';
+
+  @override
+  String get contacts_roomPing => 'Raumserver anpingen';
+
+  @override
+  String get contacts_chatTraceRoute => 'Pfadverfolgungsroute';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Route nach $name verfolgen';
+  }
 }

@@ -1533,5 +1533,24 @@
   "community_regenerate": "Regenerar",
   "community_secretUpdated": "Segredo atualizado para \"{name}\"",
   "community_scanToUpdateSecret": "Scanar o novo código QR para atualizar o segredo para \"{name}\"\n\n\n+++++",
-  "community_updateSecret": "Atualizar Segredo"
+  "community_updateSecret": "Atualizar Segredo",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Você",
+  "pathTrace_failed": "Falha no rastreamento de caminho.",
+  "pathTrace_notAvailable": "Traçado de caminho não disponível.",
+  "pathTrace_refreshTooltip": "Atualizar Path Trace.",
+  "contacts_pathTrace": "Traçado de Caminho",
+  "contacts_ping": "Pingar",
+  "contacts_repeaterPathTrace": "Traçar caminho para repetidor",
+  "contacts_repeaterPing": "Pingar repetidor",
+  "contacts_roomPathTrace": "Traçar caminho para o servidor da sala",
+  "contacts_roomPing": "Pingar servidor da sala",
+  "contacts_chatTraceRoute": "Rastrear rota do caminho",
+  "contacts_pathTraceTo": "Rastrear rota para {name}"
 }

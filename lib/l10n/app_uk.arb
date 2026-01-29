@@ -1534,5 +1534,24 @@
   "community_secretRegenerated": "Секретний пароль для «{name}» перегенеровано",
   "community_scanToUpdateSecret": "Відскануйте новий QR-код, щоб оновити пароль для «{name}»",
   "community_updateSecret": "Оновити секрет",
-  "community_secretUpdated": "Зміну секрету для «{name}» оновлено"
+  "community_secretUpdated": "Зміну секрету для «{name}» оновлено",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pathTrace_you": "Ви",
+  "pathTrace_failed": "Відстеження шляху не вдалося.",
+  "pathTrace_notAvailable": "Трасування шляху недоступне.",
+  "pathTrace_refreshTooltip": "Оновити Path Trace",
+  "contacts_pathTrace": "Трасування шляхів",
+  "contacts_ping": "Пінгувати",
+  "contacts_repeaterPathTrace": "Трасування шляху до повторювача",
+  "contacts_repeaterPing": "Пінгувати повторювач",
+  "contacts_roomPathTrace": "Трасування шляху до серверу кімнати",
+  "contacts_roomPing": "Пінг сервера кімнати",
+  "contacts_chatTraceRoute": "Трасування шляху",
+  "contacts_pathTraceTo": "Відстежити маршрут до {name}"
 }

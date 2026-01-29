@@ -2650,4 +2650,42 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Ny grupp';
+
+  @override
+  String get pathTrace_you => 'Du';
+
+  @override
+  String get pathTrace_failed => 'Sökvägsföljning misslyckades.';
+
+  @override
+  String get pathTrace_notAvailable => 'Path trace ej tillgänglig.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Uppdatera Path Trace';
+
+  @override
+  String get contacts_pathTrace => 'Path Trace';
+
+  @override
+  String get contacts_ping => 'Ping';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Vägspårning till repeater';
+
+  @override
+  String get contacts_repeaterPing => 'Ping-repeater';
+
+  @override
+  String get contacts_roomPathTrace => 'Vägspårning till rumserver';
+
+  @override
+  String get contacts_roomPing => 'Ping rumsserver';
+
+  @override
+  String get contacts_chatTraceRoute => 'Spåra rutt';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Spåra rutt till $name';
+  }
 }

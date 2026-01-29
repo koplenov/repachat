@@ -1308,5 +1308,24 @@
   "listFilter_repeaters": "Repeaters",
   "listFilter_roomServers": "Room servers",
   "listFilter_unreadOnly": "Unread only",
-  "listFilter_newGroup": "New group"
+  "listFilter_newGroup": "New group",
+
+  "pathTrace_you": "You",
+  "pathTrace_failed": "Path trace failed.",
+  "pathTrace_notAvailable": "Path trace not available.",
+  "pathTrace_refreshTooltip": "Refresh Path Trace.",
+  "contacts_pathTrace": "Path Trace",
+  "contacts_ping": "Ping",
+  "contacts_repeaterPathTrace": "Path trace to repeater",
+  "contacts_repeaterPing": "Ping repeater",
+  "contacts_roomPathTrace": "Path trace to room server",
+  "contacts_roomPing": "Ping room server",
+  "contacts_chatTraceRoute": "Path trace route",
+  "contacts_pathTraceTo": "Trace route to {name}",
+  "@contacts_pathTraceTo": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  }
+
 }

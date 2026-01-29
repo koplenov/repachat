@@ -2675,4 +2675,44 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get listFilter_newGroup => 'Nuovo gruppo';
+
+  @override
+  String get pathTrace_you => 'Tu';
+
+  @override
+  String get pathTrace_failed => 'Tracciamento del percorso fallito.';
+
+  @override
+  String get pathTrace_notAvailable =>
+      'Tracciamento del percorso non disponibile.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Aggiorna Path Trace.';
+
+  @override
+  String get contacts_pathTrace => 'Traccia Percorso';
+
+  @override
+  String get contacts_ping => 'Ping';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Traccia percorso al ripetitore';
+
+  @override
+  String get contacts_repeaterPing => 'Ripetitore ping';
+
+  @override
+  String get contacts_roomPathTrace =>
+      'Traccia del percorso al server della stanza';
+
+  @override
+  String get contacts_roomPing => 'Ping al server della stanza';
+
+  @override
+  String get contacts_chatTraceRoute => 'Traccia percorso path';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Traccia percorso verso $name';
+  }
 }

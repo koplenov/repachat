@@ -30,13 +30,13 @@ class AppLocalizationsSl extends AppLocalizations {
   String get common_connect => 'Poveži se';
 
   @override
-  String get common_unknownDevice => 'Nepoznane naprave';
+  String get common_unknownDevice => 'Nepoznano naprave';
 
   @override
   String get common_save => 'Shrani';
 
   @override
-  String get common_delete => 'Izbriši';
+  String get common_delete => 'Izbrisati';
 
   @override
   String get common_close => 'Zapri';
@@ -51,7 +51,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get common_settings => 'Nastavitve';
 
   @override
-  String get common_disconnect => 'Odklopi';
+  String get common_disconnect => 'Odklopiti';
 
   @override
   String get common_connected => 'Povezano';
@@ -66,31 +66,31 @@ class AppLocalizationsSl extends AppLocalizations {
   String get common_continue => 'Poudarki';
 
   @override
-  String get common_share => 'Deli';
+  String get common_share => 'Deliti';
 
   @override
   String get common_copy => 'Kopiraj';
 
   @override
-  String get common_retry => 'Ponovi';
+  String get common_retry => 'Ponoviti';
 
   @override
   String get common_hide => 'Skrita';
 
   @override
-  String get common_remove => 'Izbriši';
+  String get common_remove => 'Izbrisati';
 
   @override
   String get common_enable => 'Omogoči';
 
   @override
-  String get common_disable => 'Izklopi';
+  String get common_disable => 'Izklopiti';
 
   @override
-  String get common_reboot => 'Ponovno zaženi';
+  String get common_reboot => 'Ponoviti';
 
   @override
-  String get common_loading => 'Nalaganje...';
+  String get common_loading => 'Naložanje...';
 
   @override
   String get common_notAvailable => '—';
@@ -109,7 +109,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get scanner_title => 'MeshCore Open';
 
   @override
-  String get scanner_scanning => 'Iščem naprave...';
+  String get scanner_scanning => 'Skeniram za naprave...';
 
   @override
   String get scanner_connecting => 'Povezujem se...';
@@ -118,7 +118,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get scanner_disconnecting => 'Odklapljam se...';
 
   @override
-  String get scanner_notConnected => 'Ni povezave';
+  String get scanner_notConnected => 'Nezavezan';
 
   @override
   String scanner_connectedTo(String deviceName) {
@@ -134,7 +134,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String scanner_connectionFailed(String error) {
-    return 'Napaka pri povezavi: $error';
+    return 'Pošlo je z povezavo: $error';
   }
 
   @override
@@ -144,7 +144,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get scanner_scan => 'Skeniraj';
 
   @override
-  String get device_quickSwitch => 'Hitri preklop';
+  String get device_quickSwitch => 'Hitro preklop';
 
   @override
   String get device_meshcore => 'MeshCore';
@@ -153,7 +153,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_title => 'Nastavitve';
 
   @override
-  String get settings_deviceInfo => 'Informacije o napravi';
+  String get settings_deviceInfo => 'Informacije o napravei';
 
   @override
   String get settings_appSettings => 'Nastavitve aplikacije';
@@ -208,14 +208,14 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get settings_locationGPSEnableSubtitle =>
-      'Omogoči samodejno posodabljanje lokacije z GPS-om.';
+      'Omogoči samodejno posodabljanje lokacije z GPS-jem.';
 
   @override
-  String get settings_locationIntervalSec => 'Interval za GPS (sekunde)';
+  String get settings_locationIntervalSec => 'Interval za GPS (Sekunde)';
 
   @override
   String get settings_locationIntervalInvalid =>
-      'Interval mora biti med 60 in 86400 sekund.';
+      'Intervallo mora biti vsaj 60 sekund in manj kot 86400 sekund.';
 
   @override
   String get settings_latitude => 'Širina';
@@ -243,7 +243,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_actions => 'Akcije';
 
   @override
-  String get settings_sendAdvertisement => 'Pošlji oglas';
+  String get settings_sendAdvertisement => 'Pošlji Oglas';
 
   @override
   String get settings_sendAdvertisementSubtitle =>
@@ -262,7 +262,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_timeSynchronized => 'Ura sinhronizirana';
 
   @override
-  String get settings_refreshContacts => 'Osveži stike';
+  String get settings_refreshContacts => 'Ponovno obišči kontakte';
 
   @override
   String get settings_refreshContactsSubtitle =>
@@ -272,8 +272,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_rebootDevice => 'Ponovni zagon naprave';
 
   @override
-  String get settings_rebootDeviceSubtitle =>
-      'Ponovno zaženi MeshCore napravo';
+  String get settings_rebootDeviceSubtitle => 'Ponovno zaženi MeshCore napravo';
 
   @override
   String get settings_rebootDeviceConfirm =>
@@ -296,7 +295,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_appDebugLogSubtitle => 'Debug sporočila aplikacije';
 
   @override
-  String get settings_about => 'O aplikaciji';
+  String get settings_about => 'Oglejte si';
 
   @override
   String settings_aboutVersion(String version) {
@@ -359,7 +358,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_spreadingFactor => 'Razširitveni faktor';
 
   @override
-  String get settings_codingRate => 'Programska hitrost (CR)';
+  String get settings_codingRate => 'Programska hitrost';
 
   @override
   String get settings_txPower => 'TX Moč (dBm)';
@@ -371,7 +370,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get settings_txPowerInvalid => 'Neveljavna TX moč (0-22 dBm)';
 
   @override
-  String get settings_longRange => 'Dolg doseg';
+  String get settings_longRange => 'DDolg doseg';
 
   @override
   String get settings_fastSpeed => 'Visoka hitrost';
@@ -506,7 +505,8 @@ class AppLocalizationsSl extends AppLocalizations {
       'Poti ne bodo samodejno čiščene.';
 
   @override
-  String get appSettings_autoRouteRotation => 'Avtomatsko rotacija prenosne poti';
+  String get appSettings_autoRouteRotation =>
+      'Avtomatsko rotacija prenosne poti';
 
   @override
   String get appSettings_autoRouteRotationSubtitle =>
@@ -551,8 +551,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get appSettings_showRepeaters => 'Prikaži repetitorje';
 
   @override
-  String get appSettings_showRepeatersSubtitle =>
-      'Prikaži repetitorje na mapi';
+  String get appSettings_showRepeatersSubtitle => 'Prikaži repetitorje na mapi';
 
   @override
   String get appSettings_showChatNodes => 'Prikaži naprave za klepet';
@@ -638,7 +637,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get contacts_contactsWillAppear =>
-      'Stiki se bodo prikazali takoj, ko se naprave oglasijo.';
+      'Stiki se bodo prikazali, ko se naprave oglasijo.';
 
   @override
   String get contacts_searchContacts => 'Iskanje stikov...';
@@ -647,8 +646,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get contacts_noUnreadContacts => 'Ne prebrani stiki.';
 
   @override
-  String get contacts_noContactsFound =>
-      'Stiki niso najdeni.';
+  String get contacts_noContactsFound => 'Stiki niso najdeni.';
 
   @override
   String get contacts_deleteContact => 'Izbriši stik';
@@ -659,10 +657,10 @@ class AppLocalizationsSl extends AppLocalizations {
   }
 
   @override
-  String get contacts_manageRepeater => 'Upravljanje repetitorjev';
+  String get contacts_manageRepeater => 'Upravljaj Ponovitve';
 
   @override
-  String get contacts_manageRoom => 'Upravljanje strežniške sobe';
+  String get contacts_manageRoom => 'Upravljajte strežnik sobe';
 
   @override
   String get contacts_roomLogin => 'Prijava v sobo';
@@ -862,20 +860,20 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get channels_joinPublicChannelDesc =>
-      'Kdorkoli se lahko pridruži tej skupini.';
+      'Kdor karkoli je, lahko se pridruži tej skupini.';
 
   @override
-  String get channels_joinHashtagChannel => 'Pridružite se kanalu s hashtagom';
+  String get channels_joinHashtagChannel => 'Pridružite se Kanalu z Hashtagom';
 
   @override
   String get channels_joinHashtagChannelDesc =>
-      'Kdorkoli se lahko pridruži hashtag kanalom.';
+      'Kdor karkoli, lahko se pridruži hashtag kanalom.';
 
   @override
   String get channels_scanQrCode => 'Skeniraj QR kodo';
 
   @override
-  String get channels_scanQrCodeComingSoon => 'Prihaja kmalu';
+  String get channels_scanQrCodeComingSoon => 'Prihajajoča';
 
   @override
   String get channels_enterHashtag => 'Vnesite hashtag';
@@ -895,7 +893,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String chat_replyingTo(String name) {
-    return 'Odgovori $name';
+    return 'Odgovarjanje $name';
   }
 
   @override
@@ -930,7 +928,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String chat_retryCount(int current, int max) {
-    return 'Ponovitev $current/$max';
+    return 'Ponovit $current/$max';
   }
 
   @override
@@ -997,7 +995,7 @@ class AppLocalizationsSl extends AppLocalizations {
   String get debugLog_bleCopied => 'Kopirana beležka iz BLE';
 
   @override
-  String get debugLog_noEntries => 'Ni debug zapisov.';
+  String get debugLog_noEntries => 'Ni ustvarjenih debug zapisov.';
 
   @override
   String get debugLog_enableInSettings =>
@@ -1019,7 +1017,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String debugFrame_command(String value) {
-    return 'Ukaz: 0x$value';
+    return 'Navodilo: 0x$value';
   }
 
   @override
@@ -1152,7 +1150,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get chat_pathSavedLocally =>
-      'Shranjeno lokalno. Povežite se za sinhronizacijo.';
+      'Shrano lokalno. Povežite se za sinhronizacijo.';
 
   @override
   String get chat_pathDeviceConfirmed => 'Naprave potrjeno.';
@@ -2561,7 +2559,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String community_deleteConfirm(String name) {
-    return 'Zapustiti \"$name\"?';
+    return 'Zapusti \"$name\"?';
   }
 
   @override
@@ -2575,7 +2573,7 @@ class AppLocalizationsSl extends AppLocalizations {
   }
 
   @override
-  String get community_regenerateSecret => 'Preberi nov tajni kôd';
+  String get community_regenerateSecret => 'Ponovno ustvari geslo';
 
   @override
   String community_regenerateSecretConfirm(String name) {
@@ -2587,11 +2585,11 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String community_secretRegenerated(String name) {
-    return 'Tajna za \"$name\" ponovno ustvarjena';
+    return 'Geslo za \"$name\" ponovno ustvarjeno';
   }
 
   @override
-  String get community_updateSecret => 'Ažurniraj tajno';
+  String get community_updateSecret => 'Ažuriraj ključ';
 
   @override
   String community_secretUpdated(String name) {
@@ -2600,7 +2598,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String community_scanToUpdateSecret(String name) {
-    return 'Skeniraj nov kôd QR za posodabljanje tajne za $name';
+    return 'Skeniraj novo QR kodo za posodabljanje ključa za $name';
   }
 
   @override
@@ -2618,7 +2616,7 @@ class AppLocalizationsSl extends AppLocalizations {
 
   @override
   String get community_regularHashtagDesc =>
-      'javna oznaka (kdorkoli lahko sodelujeje)';
+      'javna oznaka (kdorkoli lahko sodeluje)';
 
   @override
   String get community_communityHashtag => 'Skupnostni hashtag';
@@ -2633,7 +2631,7 @@ class AppLocalizationsSl extends AppLocalizations {
   }
 
   @override
-  String get listFilter_tooltip => 'Filtri in sortiranje';
+  String get listFilter_tooltip => 'Filtri in vrstiči';
 
   @override
   String get listFilter_sortBy => 'Sortiraj po';
@@ -2657,14 +2655,52 @@ class AppLocalizationsSl extends AppLocalizations {
   String get listFilter_users => 'Uporabniki';
 
   @override
-  String get listFilter_repeaters => 'Samo repetirorji';
+  String get listFilter_repeaters => 'Ponovitve';
 
   @override
-  String get listFilter_roomServers => 'Samo room serverji';
+  String get listFilter_roomServers => 'Smeti za prostore';
 
   @override
-  String get listFilter_unreadOnly => 'Samo neprebrani';
+  String get listFilter_unreadOnly => 'Nezbrani samo';
 
   @override
   String get listFilter_newGroup => 'Nova skupina';
+
+  @override
+  String get pathTrace_you => 'Ti';
+
+  @override
+  String get pathTrace_failed => 'Sledenje poti ni uspelo.';
+
+  @override
+  String get pathTrace_notAvailable => 'Potni sled ni na voljo.';
+
+  @override
+  String get pathTrace_refreshTooltip => 'Osveži Path Trace.';
+
+  @override
+  String get contacts_pathTrace => 'Sledenje poti';
+
+  @override
+  String get contacts_ping => 'Pingati';
+
+  @override
+  String get contacts_repeaterPathTrace => 'Sledi poti do ponavljalnika';
+
+  @override
+  String get contacts_repeaterPing => 'Pinguj ponavljalnik';
+
+  @override
+  String get contacts_roomPathTrace => 'Sledenje poti do strežnika sobe';
+
+  @override
+  String get contacts_roomPing => 'Ping strežnik sobe';
+
+  @override
+  String get contacts_chatTraceRoute => 'Slediti poti žarkov';
+
+  @override
+  String contacts_pathTraceTo(String name) {
+    return 'Trace route to $name';
+  }
 }
