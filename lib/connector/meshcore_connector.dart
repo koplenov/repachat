@@ -706,7 +706,7 @@ class MeshCoreConnector extends ChangeNotifier {
 
     try {
       _connectionSubscription = device.connectionState.listen((state) {
-        if (state == BluetoothConnectionState.disconnected) {
+        if (state == BluetoothConnectionState.disconnected && isConnected) {
           _handleDisconnection();
         }
       });
@@ -959,12 +959,7 @@ class MeshCoreConnector extends ChangeNotifier {
     if (!isConnected) return;
     if (_batteryRequested && !force) return;
     _batteryRequested = true;
-    try {
-      await sendFrame(buildGetBattAndStorageFrame());
-    } catch (e) {
-      // Connection likely lost - trigger disconnection handling
-      _handleDisconnection();
-    }
+    await sendFrame(buildGetBattAndStorageFrame());
   }
 
   void _startBatteryPolling() {
@@ -995,6 +990,7 @@ class MeshCoreConnector extends ChangeNotifier {
   }
 
   Future<void> _requestDeviceInfo() async {
+    if (!isConnected || _awaitingSelfInfo) return;
     _awaitingSelfInfo = true;
     await sendFrame(buildDeviceQueryFrame());
     await sendFrame(buildAppStartFrame());
