@@ -688,9 +688,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  _gpxExport(GpxExport exporter) async {
+  _gpxExport(
+    GpxExport exporter,
+    String name,
+    String description,
+    String filename,
+    String shareText,
+    String subject,
+  ) async {
     final l10n = context.l10n;
-    final result = await exporter.exportGPX();
+    final result = await exporter.exportGPX(
+      name,
+      description,
+      filename,
+      shareText,
+      subject,
+    );
     if (!mounted) return;
     switch (result) {
       case gpxExportSuccess:
@@ -701,14 +714,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.settings_gpxExportNoContacts)),
         );
+        break;
       case gpxExportNotAvailable:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.settings_gpxExportNotAvailable)),
         );
+        break;
       case gpxExportFailed:
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.settings_gpxExportError)));
+        break;
     }
   }
 
@@ -725,7 +741,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () async {
               final exporter = GpxExport(connector);
               exporter.addRepeaters();
-              _gpxExport(exporter);
+              _gpxExport(
+                exporter,
+                l10n.map_repeater,
+                l10n.settings_gpxExportRepeatersRoom,
+                "meshcore_repeaters_",
+                l10n.settings_gpxExportShareText,
+                l10n.settings_gpxExportShareSubject,
+              );
             },
           ),
           ListTile(
@@ -736,7 +759,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () async {
               final exporter = GpxExport(connector);
               exporter.addContacts();
-              _gpxExport(exporter);
+              _gpxExport(
+                exporter,
+                l10n.map_repeater,
+                l10n.settings_gpxExportChat,
+                "meshcore_contacts_",
+                l10n.settings_gpxExportShareText,
+                l10n.settings_gpxExportShareSubject,
+              );
             },
           ),
           ListTile(
@@ -747,7 +777,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () async {
               final exporter = GpxExport(connector);
               exporter.addAll();
-              _gpxExport(exporter);
+              _gpxExport(
+                exporter,
+                l10n.map_repeater,
+                l10n.settings_gpxExportAllContacts,
+                "meshcore_all_",
+                l10n.settings_gpxExportShareText,
+                l10n.settings_gpxExportShareSubject,
+              );
             },
           ),
         ],

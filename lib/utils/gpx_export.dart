@@ -102,7 +102,13 @@ class GpxExport {
     }
   }
 
-  Future<int> exportGPX() async {
+  Future<int> exportGPX(
+    String name,
+    String description,
+    String filename,
+    String shareText,
+    String subject,
+  ) async {
     if (_contacts.isEmpty) {
       debugPrint("No repeaters to export – nothing to share.");
       return gpxExportNoContacts;
@@ -112,10 +118,10 @@ class GpxExport {
       // 1. Build GPX content (your existing logic – unchanged here)
       final gpx = Gpx()
         ..version = '1.1'
-        ..creator = 'meshcore-open Repeater Exporter'
+        ..creator = 'meshcore-open exporter'
         ..metadata = Metadata(
-          name: 'Meshcore Repeaters',
-          desc: 'Repeater & room locations exported from meshcore-open',
+          name: name,
+          desc: description,
           time: DateTime.now().toUtc(),
         );
 
@@ -142,7 +148,9 @@ class GpxExport {
           .replaceAll('.', '-')
           .split('T')
           .join('_');
-      final path = '${dir.path}/meshcore_repeaters_$timestamp.gpx';
+
+      // ignore: unnecessary_string_escapes
+      final path = '${dir.path}/$filename$timestamp.gpx';
 
       final file = File(path);
       await file.writeAsString(xml);
@@ -150,9 +158,8 @@ class GpxExport {
       // 3. Modern share call (2025+ style)
       final result = await SharePlus.instance.share(
         ShareParams(
-          text:
-              'Repeater locations exported from meshcore-open app as GPX file.',
-          subject: 'Meshcore Repeaters GPX Export',
+          text: shareText,
+          subject: subject,
           files: [XFile(path)],
           // Optional: sharePositionOrigin: ... (if you want iPad popover positioning)
         ),

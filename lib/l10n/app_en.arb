@@ -1345,14 +1345,19 @@
   "contacts_contactAdvertCopied": "Advert copied to Clipboard.",
   "contacts_contactAdvertCopyFailed": "Copying advert to Clipboard failed.",
 
-  "settings_gpxExportRepeaters": "Export repeaters to GPX",
-  "settings_gpxExportRepeatersSubtitle": "Exports repeaters with a location to GPX file.",
-  "settings_gpxExportContacts": "Export contacts to GPX",
-  "settings_gpxExportContactsSubtitle": "Exports chat contacts with a location to GPX file.",
-  "settings_gpxExportAll": "Export all to GPX",
+  "settings_gpxExportRepeaters": "Export repeaters / room server to GPX",
+  "settings_gpxExportRepeatersSubtitle": "Exports repeaters / roomserver with a location to GPX file.",
+  "settings_gpxExportContacts": "Export companions to GPX",
+  "settings_gpxExportContactsSubtitle": "Exports companions with a location to GPX file.",
+  "settings_gpxExportAll": "Export all contacts to GPX",
   "settings_gpxExportAllSubtitle": "Exports all contacts with a location to GPX file.", 
   "settings_gpxExportSuccess": "Successfully exported GPX file.",
   "settings_gpxExportNoContacts": "No contacts to export.",
   "settings_gpxExportNotAvailable": "Not supported on your device/OS",
-  "settings_gpxExportError": "There was an error when exporting."
+  "settings_gpxExportError": "There was an error when exporting.",
+  "settings_gpxExportRepeatersRoom": "Repeater & room server locations",
+  "settings_gpxExportChat": "Companion locations",
+  "settings_gpxExportAllContacts": "All contacts locations",
+  "settings_gpxExportShareText": "Map data exported from meshcore-open",
+  "settings_gpxExportShareSubject": "meshcore-open GPX map data export"
 }
