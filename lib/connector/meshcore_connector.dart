@@ -658,7 +658,8 @@ class MeshCoreConnector extends ChangeNotifier {
       _scanResults.clear();
       for (var result in results) {
         if (result.device.platformName.startsWith("MeshCore-") ||
-            result.advertisementData.advName.startsWith("MeshCore-")) {
+            result.advertisementData.advName.startsWith("MeshCore-") ||
+            result.advertisementData.advName.startsWith("Whisper-")) {
           _scanResults.add(result);
         }
       }
