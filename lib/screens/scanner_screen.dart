@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,8 @@ class ScannerScreen extends StatefulWidget {
 class _ScannerScreenState extends State<ScannerScreen> {
   bool _changedNavigation = false;
   late final VoidCallback _connectionListener;
+  BluetoothAdapterState _bluetoothState = BluetoothAdapterState.unknown;
+  late StreamSubscription<BluetoothAdapterState> _bluetoothStateSubscription;
 
   @override
   void initState() {
@@ -39,12 +43,22 @@ class _ScannerScreenState extends State<ScannerScreen> {
     };
 
     connector.addListener(_connectionListener);
+
+    _bluetoothStateSubscription =
+        FlutterBluePlus.adapterState.listen((state) {
+      if (mounted) {
+        setState(() {
+          _bluetoothState = state;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     final connector = Provider.of<MeshCoreConnector>(context, listen: false);
     connector.removeListener(_connectionListener);
+    _bluetoothStateSubscription.cancel();
     super.dispose();
   }
 
@@ -62,6 +76,10 @@ class _ScannerScreenState extends State<ScannerScreen> {
           builder: (context, connector, child) {
             return Column(
               children: [
+                // Bluetooth off warning
+                if (_bluetoothState != BluetoothAdapterState.on)
+                  _bluetoothOffWarning(context),
+
                 // Status bar
                 _buildStatusBar(context, connector),
 
@@ -204,5 +222,42 @@ class _ScannerScreenState extends State<ScannerScreen> {
         );
       }
     }
+  }
+
+  Widget _bluetoothOffWarning(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      color: Colors.red.withValues(alpha: 0.15),
+      child: Row(
+        children: [
+          Icon(Icons.bluetooth_disabled, size: 24, color: Colors.red),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.scanner_bluetoothOff,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  context.l10n.scanner_bluetoothOffMessage,
+                  style: TextStyle(
+                    color: Colors.red.withValues(alpha: 0.85),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
