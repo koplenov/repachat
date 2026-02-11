@@ -28,7 +28,6 @@ class BackgroundService {
       foregroundTaskOptions: const ForegroundTaskOptions(
         interval: 5000,
         autoRunOnBoot: false,
-        allowWakeLock: true,
         allowWifiLock: false,
       ),
     );
