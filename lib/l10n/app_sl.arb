@@ -1595,5 +1595,8 @@
   "map_removeLast": "Odstrani Zadnji",
   "map_runTrace": "Zaženi sledenje poti",
   "pathTrace_clearTooltip": "Počisti pot",
-  "map_pathTraceCancelled": "Spremljanje poti je prekinjeno."
+  "map_pathTraceCancelled": "Spremljanje poti je prekinjeno.",
+  "scanner_enableBluetooth": "Omogočite Bluetooth",
+  "scanner_bluetoothOffMessage": "Prosimo, vklopite Bluetooth, da lahko poiščete naprave.",
+  "scanner_bluetoothOff": "Bluetooth je izklopljen"
 }

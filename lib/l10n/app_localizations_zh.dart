@@ -143,6 +143,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scanner_scan => '扫描';
 
   @override
+  String get scanner_bluetoothOff => '蓝牙已关闭';
+
+  @override
+  String get scanner_bluetoothOffMessage => '请打开蓝牙功能，以便搜索设备。';
+
+  @override
+  String get scanner_enableBluetooth => '启用蓝牙';
+
+  @override
   String get device_quickSwitch => '快速切换';
 
   @override

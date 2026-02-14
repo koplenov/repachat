@@ -1595,5 +1595,8 @@
   "map_pathTraceCancelled": "Tracciamento del percorso annullato.",
   "pathTrace_clearTooltip": "Pulisci percorso",
   "map_runTrace": "Esegui Path Trace",
-  "map_tapToAdd": "Tocca i nodi per aggiungerli al percorso."
+  "map_tapToAdd": "Tocca i nodi per aggiungerli al percorso.",
+  "scanner_bluetoothOff": "Il Bluetooth è disattivato.",
+  "scanner_bluetoothOffMessage": "Si prega di attivare il Bluetooth per effettuare la scansione dei dispositivi.",
+  "scanner_enableBluetooth": "Abilita il Bluetooth"
 }

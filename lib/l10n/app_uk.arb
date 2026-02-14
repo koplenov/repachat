@@ -1595,5 +1595,8 @@
   "map_runTrace": "Виконати трасування шляху",
   "pathTrace_clearTooltip": "Очистити шлях",
   "map_removeLast": "Видалити останній",
-  "map_pathTraceCancelled": "Відмінується трасування шляху"
+  "map_pathTraceCancelled": "Відмінується трасування шляху",
+  "scanner_enableBluetooth": "Увімкніть Bluetooth",
+  "scanner_bluetoothOffMessage": "Будь ласка, увімкніть Bluetooth, щоб сканувати пристрої.",
+  "scanner_bluetoothOff": "Bluetooth вимкнено"
 }

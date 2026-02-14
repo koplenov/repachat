@@ -835,5 +835,8 @@
   "map_removeLast": "Удалить последний",
   "map_pathTraceCancelled": "Отмена трассировки пути",
   "pathTrace_clearTooltip": "Очистить путь",
-  "map_runTrace": "Запустить трассировку пути"
+  "map_runTrace": "Запустить трассировку пути",
+  "scanner_enableBluetooth": "Включите Bluetooth",
+  "scanner_bluetoothOff": "Bluetooth выключен",
+  "scanner_bluetoothOffMessage": "Пожалуйста, включите Bluetooth, чтобы найти устройства."
 }

@@ -1623,5 +1623,8 @@
   "map_runTrace": "Ejecutar Rastreo de Ruta",
   "map_tapToAdd": "Pulse en los nodos para agregarlos al camino.",
   "map_removeLast": "Eliminar último",
-  "map_pathTraceCancelled": "Rastreo de ruta cancelado."
+  "map_pathTraceCancelled": "Rastreo de ruta cancelado.",
+  "scanner_bluetoothOffMessage": "Por favor, active el Bluetooth para escanear dispositivos.",
+  "scanner_bluetoothOff": "Bluetooth está desactivado.",
+  "scanner_enableBluetooth": "Habilitar Bluetooth"
 }
