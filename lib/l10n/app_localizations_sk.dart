@@ -144,6 +144,16 @@ class AppLocalizationsSk extends AppLocalizations {
   String get scanner_scan => 'Skončiť';
 
   @override
+  String get scanner_bluetoothOff => 'Bluetooth je vypnutý';
+
+  @override
+  String get scanner_bluetoothOffMessage =>
+      'Prosím, zapnite Bluetooth, aby ste mohli skenovať pre zariadenia.';
+
+  @override
+  String get scanner_enableBluetooth => 'Povolte Bluetooth';
+
+  @override
   String get device_quickSwitch => 'Rýchle prepínač';
 
   @override

@@ -68,6 +68,7 @@
   "scanner_scan": "Scan",
   "scanner_bluetoothOff": "Bluetooth is off",
   "scanner_bluetoothOffMessage": "Please turn on Bluetooth to scan for devices",
+  "scanner_enableBluetooth": "Enable Bluetooth",
 
   "device_quickSwitch": "Quick switch",
   "device_meshcore": "MeshCore",

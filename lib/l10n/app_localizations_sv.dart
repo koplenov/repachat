@@ -143,6 +143,16 @@ class AppLocalizationsSv extends AppLocalizations {
   String get scanner_scan => 'Skanna';
 
   @override
+  String get scanner_bluetoothOff => 'Bluetooth är avstängt';
+
+  @override
+  String get scanner_bluetoothOffMessage =>
+      'Vänligen aktivera Bluetooth för att söka efter enheter.';
+
+  @override
+  String get scanner_enableBluetooth => 'Aktivera Bluetooth';
+
+  @override
   String get device_quickSwitch => 'Snabb växling';
 
   @override

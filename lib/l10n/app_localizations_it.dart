@@ -144,6 +144,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get scanner_scan => 'Scansiona';
 
   @override
+  String get scanner_bluetoothOff => 'Il Bluetooth è disattivato.';
+
+  @override
+  String get scanner_bluetoothOffMessage =>
+      'Si prega di attivare il Bluetooth per effettuare la scansione dei dispositivi.';
+
+  @override
+  String get scanner_enableBluetooth => 'Abilita il Bluetooth';
+
+  @override
   String get device_quickSwitch => 'Passa velocemente';
 
   @override

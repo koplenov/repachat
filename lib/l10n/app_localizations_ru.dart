@@ -143,6 +143,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scanner_scan => 'Сканирование';
 
   @override
+  String get scanner_bluetoothOff => 'Bluetooth выключен';
+
+  @override
+  String get scanner_bluetoothOffMessage =>
+      'Пожалуйста, включите Bluetooth, чтобы найти устройства.';
+
+  @override
+  String get scanner_enableBluetooth => 'Включите Bluetooth';
+
+  @override
   String get device_quickSwitch => 'Быстрое переключение';
 
   @override

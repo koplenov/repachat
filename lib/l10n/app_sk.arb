@@ -1595,5 +1595,8 @@
   "map_tapToAdd": "Kliknite na uzly, aby ste ich pridali k ceste.",
   "map_removeLast": "Odstrániť posledný",
   "map_runTrace": "Spustiť trasovaním cesty",
-  "map_pathTraceCancelled": "Zrušenie stopáže cesty bolo zrušené."
+  "map_pathTraceCancelled": "Zrušenie stopáže cesty bolo zrušené.",
+  "scanner_bluetoothOffMessage": "Prosím, zapnite Bluetooth, aby ste mohli skenovať pre zariadenia.",
+  "scanner_bluetoothOff": "Bluetooth je vypnutý",
+  "scanner_enableBluetooth": "Povolte Bluetooth"
 }

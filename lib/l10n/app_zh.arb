@@ -1595,5 +1595,8 @@
   "pathTrace_clearTooltip": "清除路径",
   "map_pathTraceCancelled": "路径跟踪已取消",
   "map_removeLast": "删除最后一个",
-  "map_runTrace": "运行路径跟踪"
+  "map_runTrace": "运行路径跟踪",
+  "scanner_bluetoothOffMessage": "请打开蓝牙功能，以便搜索设备。",
+  "scanner_bluetoothOff": "蓝牙已关闭",
+  "scanner_enableBluetooth": "启用蓝牙"
 }

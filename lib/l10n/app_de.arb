@@ -1623,5 +1623,8 @@
   "map_tapToAdd": "Tippen Sie auf Knoten, um sie zum Pfad hinzuzufügen.",
   "map_runTrace": "Pfadverlauf ausführen",
   "pathTrace_clearTooltip": "Pfad löschen",
-  "map_pathTraceCancelled": "Pfadverfolgung abgebrochen."
+  "map_pathTraceCancelled": "Pfadverfolgung abgebrochen.",
+  "scanner_bluetoothOffMessage": "Bitte aktivieren Sie Bluetooth, um nach Geräten zu suchen.",
+  "scanner_bluetoothOff": "Bluetooth ist deaktiviert.",
+  "scanner_enableBluetooth": "Bluetooth aktivieren"
 }
